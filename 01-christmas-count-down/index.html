@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Itim&family=Mountains+of+Christmas:wght@400;700&display=swap" rel="stylesheet">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Christmas calender</title>
+</head>
+<body>
+    <section class="container snow-container">
+    </section>
+    <div class="christmas-display-box">
+      <div class="christmas-message">
+        <p id="xmas-msg-prefix">Chrismas begins in</p>
+        <span id="christmas-counter"></span>
+      </div>
+    </div>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
+    <link rel="stylesheet" href="./stylesheets/style.css">
+    <script src="./scripts/main.js"></script>
+</body>
+<script>
+  const christmasCounter = document.getElementById("christmas-counter")
+  window.addEventListener("load", () => {
+    updateChristmasCounter();
+    function updateChristmasCounter() {
+      const today = new Date();
+
+      const displayDate = convertDateToText(today);
+      christmasCounter.setHTMLUnsafe(displayDate);
+      setTimeout(updateChristmasCounter, 500);
+    }
+  });
+
+  function convertDateToText(date) {
+    const christmasDate = new Date(date.getFullYear(), 11, 25, 0, 0, 0);
+    const timeUntilChristmas = christmasDate.getTime() - date.getTime();
+    const days = Math.round(timeUntilChristmas / (1000 * 3600 * 24));
+    
+    if (days <= 0) {
+      return "now!"
+    }
+    return days + " days ";
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const snowContainer = document.querySelector(".snow-container");
+
+    const particlesPerThousandPixels = 0.1;
+    const fallSpeed = 1.25;
+    const pauseWhenNotActive = true;
+    const maxSnowflakes = 200;
+    const snowflakes = [];
+
+    let snowflakeInterval;
+    let isTabActive = true;
+
+    function resetSnowflake(snowflake) {
+        const size = Math.random() * 5 + 1;
+        const viewportWidth = window.innerWidth - size; // Adjust for snowflake size
+        const viewportHeight = window.innerHeight;
+
+        snowflake.style.width = `${size}px`;
+        snowflake.style.height = `${size}px`;
+        snowflake.style.left = `${Math.random() * viewportWidth}px`; // Constrain within viewport width
+        snowflake.style.top = `-${size}px`;
+
+        const animationDuration = (Math.random() * 3 + 2) / fallSpeed;
+        snowflake.style.animationDuration = `${animationDuration}s`;
+        snowflake.style.animationTimingFunction = "linear";
+        snowflake.style.animationName =
+            Math.random() < 0.5 ? "fall" : "diagonal-fall";
+
+        setTimeout(() => {
+            if (parseInt(snowflake.style.top, 10) < viewportHeight) {
+                resetSnowflake(snowflake);
+            } else {
+                snowflake.remove(); // Remove when it goes off the bottom edge
+            }
+        }, animationDuration * 1000);
+    }
+
+    function createSnowflake() {
+        if (snowflakes.length < maxSnowflakes) {
+            const snowflake = document.createElement("div");
+            snowflake.classList.add("snowflake");
+            snowflakes.push(snowflake);
+            snowContainer.appendChild(snowflake);
+            resetSnowflake(snowflake);
+        }
+    }
+
+    function generateSnowflakes() {
+        const numberOfParticles =
+            Math.ceil((window.innerWidth * window.innerHeight) / 1000) *
+            particlesPerThousandPixels;
+        const interval = 5000 / numberOfParticles;
+
+        clearInterval(snowflakeInterval);
+        snowflakeInterval = setInterval(() => {
+            if (isTabActive && snowflakes.length < maxSnowflakes) {
+                requestAnimationFrame(createSnowflake);
+            }
+        }, interval);
+    }
+
+    function handleVisibilityChange() {
+        if (!pauseWhenNotActive) return;
+
+        isTabActive = !document.hidden;
+        if (isTabActive) {
+            generateSnowflakes();
+        } else {
+            clearInterval(snowflakeInterval);
+        }
+    }
+
+    generateSnowflakes();
+
+    window.addEventListener("resize", () => {
+        clearInterval(snowflakeInterval);
+        setTimeout(generateSnowflakes, 1000);
+    });
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+});
+</script>
+</html>
