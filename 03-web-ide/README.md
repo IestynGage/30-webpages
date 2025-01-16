@@ -17,7 +17,7 @@ setInterval(() => {
 
 ## Cool things
 
-I used a dedicated worked to run the code.
+I used a dedicated web worker to run the code.
 This allows me to stop the code when I want.
 
 I also set up typescript in this project.
