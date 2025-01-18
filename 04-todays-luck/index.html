@@ -1,10 +1,28 @@
-<script src="./example.js"></script>
-
-
-
-<div>
-  <span>
-    How much luck do you have today:
-  </span>
-  <today-luck></today-luck>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Luck </title>
+    <script src="./today-luck-component.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f8ff;
+        }
+        .container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+      <todays-luck></todays-luck>
+    </div>
+</body>
+</html>
