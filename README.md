@@ -10,3 +10,4 @@ After the 30 pages are done I'll go over each page and aswer any questions I had
 * `01-christmas-count-down` - Displays how many days until christmas.
 * `02-command-line-game` - A small "terminial" game that runs in the browser console.
 * `03-web-ide` - A javascript ide 
+* `04-todays-luck` - Calculates the amount of luck that you have today.
