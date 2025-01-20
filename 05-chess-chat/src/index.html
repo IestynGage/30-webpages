@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chess chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #messageBox {
+      width: 300px;
+      padding: 8px;
+      margin-right: 10px;
+    }
+    #sendButton {
+      padding: 8px 15px;
+      cursor: pointer;
+    }
+    #log {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      max-width: 500px;
+      max-height: 300px;
+      overflow-y: auto;
+      background: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <h1>WebSocket Client</h1>
+  <input type="text" id="messageBox" placeholder="Enter your message here" />
+  <button id="sendButton">Send</button>
+  <div id="log"></div>
+
+  <script>
+    const log = document.getElementById('log');
+    const messageBox = document.getElementById('messageBox');
+    const sendButton = document.getElementById('sendButton');
+
+    const socket = new WebSocket(`ws://${window.location.hostname}:${3000}`);
+    socket.addEventListener('message', (event) => {
+      const message = document.createElement('div');
+      message.textContent = `Server: ${event.data}`;
+      log.appendChild(message);
+    });
+
+    sendButton.addEventListener('click', () => {
+      const message = messageBox.value;
+      if (message && socket.readyState === WebSocket.OPEN) {
+        socket.send(message);
+
+        const messageLog = document.createElement('div');
+        messageLog.textContent = `You: ${message}`;
+        log.appendChild(messageLog);
+
+        messageBox.value = '';
+      }
+    });
+
+    socket.addEventListener('open', () => {
+      const message = document.createElement('div');
+      message.textContent = 'WebSocket connection established';
+      log.appendChild(message);
+    });
+
+    socket.addEventListener('close', () => {
+      const message = document.createElement('div');
+      message.textContent = 'WebSocket connection closed';
+      log.appendChild(message);
+    });
+
+    socket.addEventListener('error', () => {
+      const message = document.createElement('div');
+      message.textContent = 'WebSocket error occurred';
+      log.appendChild(message);
+    });
+  </script>
+</body>
+</html>
