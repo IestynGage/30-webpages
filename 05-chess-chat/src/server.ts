@@ -25,30 +25,38 @@ const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
   console.log('New WebSocket connection');
-
-  let messagesRecieved = 0;
-
+  let username: string;
 
   ws.on('message', (message) => {
-    // let a = eval(`${message}`);
-    
-    // console.log("type", (message as any).type)
-    console.log("type2", JSON.parse(message as any).type)
-    console.log(`Received message: ${message}`);
-    ws.send(`Echo: ${message}`);
+    const type = JSON.parse(message as any).type;
+    if (type === 'username') {
+      username = JSON.parse(message as any).message;
+      console.log("set-username", username);
+    }
+    if (type === 'chat') {
+      echoChatRoom(username ?? " ", JSON.parse(message as any).message);
+    }
+    // console.log(`Received message: ${message}`);
+    // ws.send(`Echo: ${message}`);
         // ws.send(`Echo: ${message}`);
-    messagesRecieved++;
-    ws.send(`Total connections ${[...wss.clients.keys()].length}`);
-    ws.send(`Messages recieved ${messagesRecieved}`);
+    // messagesRecieved++;
+    // ws.send(`Total connections ${[...wss.clients.keys()].length}`);
+    // ws.send(`Messages recieved ${messagesRecieved}`);
   });
 
   ws.on('close', () => {
     console.log('WebSocket connection closed');
     wss.clients.forEach(c => {
-      c.send(`Client left, total connections ${[...wss.clients.keys()].length}`);
+      c.send(`${(c as any).userame ? (c as any).userame : "client"} left, total connections ${[...wss.clients.keys()].length}`);
     })
   });
 });
+
+function echoChatRoom(username:string, message: string): void {
+  wss.clients.forEach((c) => {
+    c.send(`${username} : ${message}`);
+  })
+}
 
 server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

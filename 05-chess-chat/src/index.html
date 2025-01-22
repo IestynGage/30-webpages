@@ -31,6 +31,8 @@
 </head>
 <body>
   <h1>Chest chat</h1>
+  <input type="text" id="usernameBox" placeholder="Enter your username" />
+  <button id="sendUsername">Send</button>
   <input type="text" id="messageBox" placeholder="Enter your message here" />
   <button id="sendButton">Send</button>
   <div id="log"></div>
@@ -42,6 +44,27 @@
     const messageBox = document.getElementById('messageBox');
     const sendButton = document.getElementById('sendButton');
 
+    const usernameBox = document.getElementById('usernameBox');
+    const sendUsername = document.getElementById('sendUsername');
+    sendUsername.addEventListener('click', () => {
+      const message = usernameBox.value;
+      if (message && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({
+          type: "username",
+          message: message
+        }));
+        usernameBox.remove();
+        sendUsername.remove();
+
+        // const messageLog = document.createElement('div');
+        // messageLog.textContent = `You: ${message}`;
+        // log.appendChild(messageLog);
+
+        // messageBox.value = '';
+      }
+    });
+
+
     const socket = new WebSocket(`ws://${window.location.hostname}:${3000}`);
     socket.addEventListener('message', (event) => {
       const message = document.createElement('div');
@@ -52,10 +75,9 @@
     sendButton.addEventListener('click', () => {
       const message = messageBox.value;
       if (message && socket.readyState === WebSocket.OPEN) {
-        // console.log("validChessNotation", validChessNotation(message));
         socket.send(JSON.stringify({
-          type: "message",
-          message: "asdasdasdas"
+          type: "chat",
+          message: message
         }));
 
         const messageLog = document.createElement('div');
