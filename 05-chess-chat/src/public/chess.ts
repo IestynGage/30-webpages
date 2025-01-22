@@ -1,5 +1,5 @@
 
-const chessNoationRegex = /^[a-h][1-8][a-h][1-8]/;
+const chessNoationRegex = /^[♔♕♖♗♘♙♚♛♜♝♞♟BNQRK]?[a-h][1-8]X?[a-h][1-8]Q?/;
 
 /**
  * Checks if a string is in a chess move in full "Disambiguating moves".

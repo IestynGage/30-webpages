@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { WebSocketServer } from 'ws';
 import http from 'http';
 import path from 'path';
-
+import { validChessNotation } from './public/chess';
 
 const app = express();
 const PORT = 3000;
@@ -10,15 +10,9 @@ const PORT = 3000;
 app.use(express.static('public'))
 
 app.get('/', (req: Request, res: Response) => {
-  const indexPath = path.join(__dirname, 'index.html'); // Adjust path for compiled files
+  const indexPath = path.join(__dirname, 'index.html');
   res.sendFile(indexPath);
 });
-
-// app.get('/chess', (req: Request, res: Response) => {
-//   console.log("asdsdasd")
-//   const indexPath = path.join(__dirname, 'chess.js'); // Adjust path for compiled files
-//   res.sendFile(indexPath);
-// });
 
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
@@ -26,35 +20,37 @@ const wss = new WebSocketServer({ server });
 wss.on('connection', (ws) => {
   console.log('New WebSocket connection');
   let username: string;
+  let color: string;
 
   ws.on('message', (message) => {
-    const type = JSON.parse(message as any).type;
+    const recievedJson = JSON.parse(message as any);
+    const type = recievedJson.type;
     if (type === 'username') {
-      username = JSON.parse(message as any).message;
-      console.log("set-username", username);
+      username = recievedJson.message;
+      color = "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0");
     }
-    if (type === 'chat') {
-      echoChatRoom(username ?? " ", JSON.parse(message as any).message);
+    else if (type === 'chat') {
+      if (validChessNotation(recievedJson.message)) {
+        echoChatRoom(username ?? " ", color ?? "red", recievedJson.message);
+      }
     }
-    // console.log(`Received message: ${message}`);
-    // ws.send(`Echo: ${message}`);
-        // ws.send(`Echo: ${message}`);
-    // messagesRecieved++;
-    // ws.send(`Total connections ${[...wss.clients.keys()].length}`);
-    // ws.send(`Messages recieved ${messagesRecieved}`);
+
   });
 
   ws.on('close', () => {
     console.log('WebSocket connection closed');
-    wss.clients.forEach(c => {
-      c.send(`${(c as any).userame ? (c as any).userame : "client"} left, total connections ${[...wss.clients.keys()].length}`);
-    })
+    echoChatRoom(username, color, "has left the chat");
   });
+
 });
 
-function echoChatRoom(username:string, message: string): void {
+function echoChatRoom(username:string, color: string, message: string): void {
   wss.clients.forEach((c) => {
-    c.send(`${username} : ${message}`);
+    c.send(JSON.stringify({
+      username: username,
+      color: color,
+      message: message
+    }));
   })
 }
 
