@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .todo-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .todo-container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .todo-input {
+            width: calc(100% - 60px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .add-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .add-btn:hover {
+            background-color: #0056b3;
+        }
+        .todo-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .todo-item.completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+        .todo-item button {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .delete-btn {
+            color: #e63946;
+        }
+    </style>
+      <script src="https://unpkg.com/htmx.org"></script>
+</head>
+<body>
+  <div class="todo-container">
+    <h1>To-Do List</h1>
+    <div class="input-container">
+      <input type="text" id="todoInput" class="todo-input" placeholder="Add a new task...">
+      <button class="add-btn" 
+        hx-post="/{{ listId }}/item" 
+        hx-target="#todoList" 
+        hx-swap="beforeend"
+        hx-vals='js:{task: document.getElementById("todoInput").value}' 
+        hx-on="htmx:afterRequest: document.getElementById('todoInput').value = ''"
+        >
+        Add
+      </button>
+    </div>
+    <ul id="todoList" class="todo-list">{{ todo | safe }}</ul>
+  </div>
+</body>
+</html>
