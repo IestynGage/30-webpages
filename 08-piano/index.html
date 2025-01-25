@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Piano</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          margin: 0;
+          background-color: #f5f5f5;
+        }
+
+        h1 {
+          margin-bottom: 20px;
+        }
+
+        .piano {
+          display: flex;
+          position: relative;
+          align-self: center;
+        }
+
+        .key {
+          height: 200px;
+          border: 1px solid #000;
+          width: 25px;
+          background-color: white;
+          position: relative;
+          z-index: 1;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+          text-align: center;
+          justify-content: center;
+          justify-items: center;
+          justify-self: center;
+          align-items: center;
+          align-content: center;
+          padding: 1em;
+        }
+
+        .key:active {
+          background-color: #ddd;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Piano</h1>
+    <div class="piano">
+        <div class="key" onmousedown="playSound('1')">F</div>
+        <div class="key" onmousedown="playSound('2')">G</div>
+        <div class="key" onmousedown="playSound('3')">A</div>
+        <div class="key" onmousedown="playSound('4')">B</div>
+        <div class="key" onmousedown="playSound('5')">C</div>
+        <div class="key" onmousedown="playSound('6')">D</div>
+        <div class="key" onmousedown="playSound('7')">E</div>
+    </div>
+
+    <script>
+      // document.addEventListener('keydown', logAnyKey);
+      document.onkeydown = function (evt) {
+        evt = evt || window.event;
+        switch(evt.keyCode) {
+          case 70:
+            playSound(1);
+            break;
+          case 71:
+            playSound(2);
+            break;
+          case 65:
+            playSound(3);
+            break;
+          case 66:
+            playSound(4);
+            break;
+          case 67:
+            playSound(5);
+            break;
+          case 68:
+            playSound(6);
+            break;
+          case 69:
+            playSound(7);
+            break;
+          default:
+            break;
+        }
+      }
+
+      function playSound(note) {
+        const audio = new Audio(`./public/key0${note}.mp3`);
+        audio.play();
+      }
+    </script>
+</body>
+</html>
