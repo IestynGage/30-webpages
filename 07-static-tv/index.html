@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Screen static</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+        #main-div {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: black;
+            font-size: 18px;
+            color: white;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        p {
+            font-size: 18px;
+            color: white;
+            /* background-color: #007BFF; */
+        }
+        span {
+          margin: 1em;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    </style>
+</head>
+<body>
+  <audio id="audioPlayer" src="./static.mp3" autoplay loop></audio>
+  <div id="main-div">
+    <button onclick="startStatic()"> Start static</button>
+      <span>
+      Sound Effect by <a href="https://pixabay.com/users/freesound_community-46691455/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=6411">freesound_community</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=6411">Pixabay</a>
+    </span>
+  </div>
+  <canvas id="myCanvas" style="display: none;"></canvas>
+
+    <script>
+      const canvas = document.getElementById('myCanvas');
+      const div = document.getElementById('main-div');
+      const ctx = canvas.getContext("2d", { alpha: false });
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let staticFrames = [];
+      let staticFrameIndex = 0;
+
+      function startStatic() {
+        const audio = document.getElementById('audioPlayer');
+        audio.play()
+        canvas.style.display = 'inherit';
+        div.remove();
+      }
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const newStaticFrames = [];
+
+        for (let i=0;i <= 30;i++) {
+          newStaticFrames.push(createStaticImage(window.innerWidth * 1.5, window.innerHeight* 1.5));
+        }
+        staticFrames = newStaticFrames;
+      }
+
+
+      function getCanvasWidth() {
+        return canvas.width;
+      }
+
+      function getCanvasHeight() {
+        return canvas.height;
+      }
+
+      function getPixelIndex(x, y) {
+        return (y * getCanvasWidth() + x) * 4;
+      }
+
+      function createStaticPixel(image, index) {
+        const color = Math.floor(Math.random() * 5);
+        switch(color) {
+          case 0:
+            colorPixel(image, index, 255, 0, 0);
+            break;
+          case 1:
+            colorPixel(image, index, 0, 255, 0);
+            break;
+          case 2:
+            colorPixel(image, index, 0, 0, 255);
+            break;
+          case 3:
+          case 4:
+            colorPixel(image, index, 0, 0, 0);
+            break;
+        }
+      }
+
+      function colorPixel(image, index, red, green, blue) {
+        image.data[index] = red;
+        image.data[index + 1] = green;
+        image.data[index + 2] = blue;
+        image.data[index + 3] = 255;
+      }
+
+      function createStaticImage(canvasWidth, canvasHeight) {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        for (let x = 0; x < canvasWidth; x++) {
+          for (let y = 0; y < canvasHeight; y++) {
+            const index = getPixelIndex(x, y);
+            createStaticPixel(imageData, index);
+          }
+        }
+        return imageData;
+      }
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      setInterval(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.putImageData(staticFrames[staticFrameIndex], 0, 0);
+        if (staticFrameIndex >= staticFrames.length - 1) {
+          staticFrameIndex = 0;
+        }
+        else {
+          staticFrameIndex++;
+        }
+      }, 50);
+    </script>
+</body>
+</html>
