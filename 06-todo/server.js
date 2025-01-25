@@ -72,8 +72,12 @@ app.post('/:id/item', (req, res) => {
 
   console.log(`POST: Add '${todoTask}' to list '${listId}'`);
 
-  upsertItem(listId, todoTask);
-  res.send(createListItem(listId, todoTask));
+  if (todoTask !== '') {
+    upsertItem(listId, todoTask);
+    res.send(createListItem(listId, todoTask));
+  }
+
+  res.status(400).send();
 });
 
 function createListItem(listId, todoTask) {
@@ -105,7 +109,7 @@ app.get('/:id', async (req, res) => {
   const id = req.params.id;
   console.log(`Requested ID: ${id}`);
   const list = await getList(id);
-  const todoLiElements = list !== null ? list.items.map(x => createListItem(id, x)) : '';
+  const todoLiElements = list !== null ? list.items.map(x => createListItem(id, x)).join('') : '';
   res.render('index', { listId: id, todo: todoLiElements });
 });
 
