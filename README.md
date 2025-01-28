@@ -11,3 +11,8 @@ After the 30 pages are done I'll go over each page and aswer any questions I had
 * `02-command-line-game` - A small "terminial" game that runs in the browser console.
 * `03-web-ide` - A javascript ide 
 * `04-todays-luck` - Calculates the amount of luck that you have today.
+* `05-chess-chat` - A chat room where users can only send chat moves.
+* `06-todo` - A simple todo page that saveds the todo in mongo DB with the use of HTMX and express.
+* `07-static-tv` - Displays tv static.
+* `08-piano` - A simple piano that you can play.
+* `09-random-button-style` A single button that changes it's style afte being pressed.
