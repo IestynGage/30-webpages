@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Toolbar</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        #toolbar {
+            background-color: #f4f4f4;
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #canvas-container {
+            flex: 1;
+            display: flex;
+        }
+
+        canvas {
+            flex: 1;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div id="toolbar">
+        <button id="verticalBtn">Vertical</button>
+        <button id="horizontalBtn">Horizontal</button>
+        <button id="colorBtn">Colour</button>
+    </div>
+    <div id="canvas-container">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const verticalBtn = document.getElementById('verticalBtn');
+        const horizontalBtn = document.getElementById('horizontalBtn');
+        const colorBtn = document.getElementById('colorBtn');
+        let lines = [];
+        let lineMode = 'vertical';
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        verticalBtn.addEventListener('click', () => {
+            lineMode = 'vertical';
+        });
+
+        horizontalBtn.addEventListener('click', () => {
+            lineMode = 'horizontal';
+        });
+
+        colorBtn.addEventListener('click', () => {
+          lineMode = 'color';
+        });
+
+        canvas.addEventListener('click', (event) => {
+          if (lineMode === 'vertical') {
+    
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            lines.push(x);
+            lines.sort((a, b) => a >= b);
+          }
+          else if (lineMode === 'horizontal') {
+            const rect = canvas.getBoundingClientRect();
+            const y = event.clientY - rect.top;
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvas.width, y);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
+          else if (lineMode === 'color') {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+           const y = event.clientY - rect.top;
+           ctx.beginPath()
+
+            
+            let minLine = lines.find(l => l <= x) ?? 0;
+            lines.forEach(l => {
+                console.log(`l: ${l}, x:${x}, minline:${minLine}`);
+                if (l < x && l > minLine) {
+                    console.log();
+                    minLine = l;
+                }
+            })
+           
+            console.log("minLine", minLine);
+            console.log("lines", lines)
+            const maxLine = lines.find(l => l > minLine) ? lines.find(l => l > minLine) - minLine : rect.right; // should be rect.right
+            // ctx.rect(minLine, y, maxLine - minLine, rect.bottom);
+            ctx.rect(minLine, y, maxLine, rect.bottom);
+            ctx.fillStyle = "red";
+            ctx.fill();
+
+          }
+        });
+    </script>
+</body>
+</html>
