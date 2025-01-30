@@ -69,6 +69,7 @@
         const colorBtn = document.getElementById('colorBtn');
         let verticalLines = [];
         let horizontalLines = [];
+        let fillIns = [];
         const colors = ['red', 'white', 'blue', 'yellow', 'black'];
         let colorIndex = 0;
         let lineMode = 'vertical';
@@ -76,6 +77,7 @@
         function resizeCanvas() {
             canvas.width = canvas.parentElement.clientWidth;
             canvas.height = canvas.parentElement.clientHeight;
+            render();
         }
 
         window.addEventListener('resize', resizeCanvas);
@@ -94,42 +96,43 @@
         });
 
         colorBtn.addEventListener('click', () => {
-            colorIndex = colorIndex + 1;
+            colorIndex = (colorIndex + 1) % colors.length;
             console.log("lasadasd")
         });
 
-        canvas.addEventListener('click', (event) => {
-          if (lineMode === 'vertical') {
-    
-            const rect = canvas.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, canvas.height);
-            ctx.strokeStyle = 'black';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            verticalLines.push(x);
-            verticalLines.sort((a, b) => a >= b);
-          }
-          else if (lineMode === 'horizontal') {
-            const rect = canvas.getBoundingClientRect();
-            const y = event.clientY - rect.top;
+        function render() {
+            fillIns.forEach(f => {
+                drawSquare(f.minLine, f.minHori, f.maxLine, f.maxHori, f.color);
+            })
+            verticalLines.forEach(v => {
+                drawVertical(v);
+            });
+
+            horizontalLines.forEach(h => {
+                drawHoriztonal(h)
+            });
+        }
+
+        function drawHoriztonal(y) {
             ctx.beginPath();
             ctx.moveTo(0, y);
             ctx.lineTo(canvas.width, y);
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 2;
             ctx.stroke();
-            horizontalLines.push(y);
-            horizontalLines.sort((a, b) => a >= b);
-          }
-          else if (lineMode === 'color') {
-            const rect = canvas.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-           const y = event.clientY - rect.top;
-           ctx.beginPath()
-           
+        }
+
+        function drawVertical(x) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        function fillIn(x, y, rect) {
+
             let minLine = verticalLines.find(l => l <= x) ?? 0;
             verticalLines.forEach(l => {
                 if (l < x && l > minLine) {
@@ -144,16 +147,49 @@
                     minHori = l;
                 }
             });
-            console.log("horizontalLines", horizontalLines);
-            const maxHori = horizontalLines.find(l => l > minHori) ? horizontalLines.find(l => l > minHori) - minHori : rect.bottom; // should b
-            console.log("minHori", minHori);
-            // console.log("lines", verticalLines)
-            const maxLine = verticalLines.find(l => l > minLine) ? verticalLines.find(l => l > minLine) - minLine : rect.right; // should be rect.right
-            // ctx.rect(minLine, y, maxLine - minLine, rect.bottom);
-            ctx.rect(minLine, minHori, maxLine, maxHori);
-            ctx.fillStyle = colors[colorIndex];
-            ctx.fill();
 
+            // TODO change 0 and rect.bottom/rect.right to a string to d
+            const maxHori = horizontalLines.find(l => l > minHori) ? horizontalLines.find(l => l > minHori) - minHori : rect.bottom;
+            const maxLine = verticalLines.find(l => l > minLine) ? verticalLines.find(l => l > minLine) - minLine : rect.right;
+            
+            
+            return {
+                minLine: minLine,
+                minHori: minHori,
+                maxLine: maxLine,
+                maxHori: maxHori,
+                color: colors[colorIndex]
+            }
+        }
+
+        function drawSquare(minLine, minHori, maxLine, maxHori, color) {
+            ctx.beginPath();
+            ctx.rect(minLine, minHori, maxLine, maxHori);
+            ctx.fillStyle = color;
+            ctx.fill();;
+        }
+
+        canvas.addEventListener('click', (event) => {
+          if (lineMode === 'vertical') {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            verticalLines.push(x);
+            verticalLines.sort((a, b) => a >= b);
+            render();
+          }
+          else if (lineMode === 'horizontal') {
+            const rect = canvas.getBoundingClientRect();
+            const y = event.clientY - rect.top;
+            horizontalLines.push(y);
+            horizontalLines.sort((a, b) => a >= b);
+            render();
+          }
+          else if (lineMode === 'color') {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            fillIns.push(fillIn(x, y, rect));
+            render();
           }
         });
     </script>
