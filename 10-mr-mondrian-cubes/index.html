@@ -18,7 +18,7 @@
             padding: 10px;
             display: flex;
             justify-content: flex-start;
-            gap: 10px;
+            /* gap: 10px; */
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
         }
 
@@ -32,6 +32,16 @@
             font-size: 16px;
         }
 
+        .btn-right { 
+            margin-right: 5px;
+            border-radius: 0px 5px 5px 0;
+        }
+
+        .btn-left {
+            margin-left: 5px;
+            border-radius: 5px 0px 0 5px;
+        }
+
         button:hover {
             background-color: #0056b3;
         }
@@ -41,31 +51,87 @@
             display: flex;
         }
 
+        #aboutBtn {
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
         canvas {
             flex: 1;
             border: 1px solid #ddd;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        p{
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
     <div id="toolbar">
-        <button id="verticalBtn">Vertical</button>
-        <button id="horizontalBtn">Horizontal</button>
-        <button id="fillBtn">Fill</button>
-        <button id="colorBtn">Colour</button>
+        <button id="verticalBtn" class="btn-left">Vertical</button>
+        <button id="horizontalBtn" class="btn-right">Horizontal</button>
+        <button id="fillBtn" class="btn-left">Fill</button>
+        <button id="colorBtn" class="btn-right">Colour</button>
         <button id="clearBtn">Clear</button>
-        <button id="AboutBtn">About</button>
+        <button id="aboutBtn">About</button>
     </div>
     <div id="canvas-container">
         <canvas id="canvas"></canvas>
     </div>
-
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>About</h2>
+            <p>
+                Mr mondrian cubes is a project dedicated to <a href="https://en.wikipedia.org/wiki/Piet_Mondrian">Piet Mondrian</a>. 
+                He was a Dutch artist best known for his role in the De Stijl movement, which emphasized geometric abstraction. 
+                He developed a distinctive style called neoplasticism, using a grid of black lines with primary colors (red, blue, yellow) and white spaces.
+            </p>
+            <p>
+                Some of his iconic paintings are "<a href="https://en.wikipedia.org/wiki/Composition_with_Red,_Blue_and_Yellow">Composition with Red, Blue, and Yellow</a>", "<a href="https://en.wikipedia.org/wiki/New_York_City_(painting)"> New york city</a>" and "<a href="https://en.wikipedia.org/wiki/Broadway_Boogie_Woogie">Broadway Boogie Woogie</a>".
+            </p>
+        </div>
+    </div>
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const verticalBtn = document.getElementById('verticalBtn');
         const horizontalBtn = document.getElementById('horizontalBtn');
         const fillBtn = document.getElementById('fillBtn');
+        const clearBtn = document.getElementById('clearBtn');
         const colorBtn = document.getElementById('colorBtn');
         let verticalLines = [];
         let horizontalLines = [];
@@ -95,12 +161,21 @@
           lineMode = 'color';
         });
 
-        colorBtn.addEventListener('click', () => {
-            colorIndex = (colorIndex + 1) % colors.length;
-            console.log("lasadasd")
+        clearBtn.addEventListener('click', () => {
+            verticalLines = [];
+            horizontalLines = [];
+            fillIns = [];
+            render();
         });
 
+        colorBtn.addEventListener('click', () => {
+            colorIndex = (colorIndex + 1) % colors.length;
+        })
+
+
+
         function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             fillIns.forEach(f => {
                 drawSquare(f.minLine, f.minHori, f.maxLine, f.maxHori, f.color);
             })
@@ -191,6 +266,24 @@
             fillIns.push(fillIn(x, y, rect));
             render();
           }
+        });
+
+        const aboutBtn = document.getElementById('aboutBtn');
+        const aboutModal = document.getElementById('aboutModal');
+        const closeBtn = document.querySelector('.close');
+
+        aboutBtn.addEventListener('click', () => {
+            aboutModal.style.display = 'block';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            aboutModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === aboutModal) {
+                aboutModal.style.display = 'none';
+            }
         });
     </script>
 </body>
