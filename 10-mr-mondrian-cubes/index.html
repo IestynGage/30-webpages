@@ -51,7 +51,10 @@
     <div id="toolbar">
         <button id="verticalBtn">Vertical</button>
         <button id="horizontalBtn">Horizontal</button>
+        <button id="fillBtn">Fill</button>
         <button id="colorBtn">Colour</button>
+        <button id="clearBtn">Clear</button>
+        <button id="AboutBtn">About</button>
     </div>
     <div id="canvas-container">
         <canvas id="canvas"></canvas>
@@ -62,8 +65,12 @@
         const ctx = canvas.getContext('2d');
         const verticalBtn = document.getElementById('verticalBtn');
         const horizontalBtn = document.getElementById('horizontalBtn');
+        const fillBtn = document.getElementById('fillBtn');
         const colorBtn = document.getElementById('colorBtn');
-        let lines = [];
+        let verticalLines = [];
+        let horizontalLines = [];
+        const colors = ['red', 'white', 'blue', 'yellow', 'black'];
+        let colorIndex = 0;
         let lineMode = 'vertical';
 
         function resizeCanvas() {
@@ -82,8 +89,13 @@
             lineMode = 'horizontal';
         });
 
-        colorBtn.addEventListener('click', () => {
+        fillBtn.addEventListener('click', () => {
           lineMode = 'color';
+        });
+
+        colorBtn.addEventListener('click', () => {
+            colorIndex = colorIndex + 1;
+            console.log("lasadasd")
         });
 
         canvas.addEventListener('click', (event) => {
@@ -97,8 +109,8 @@
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 2;
             ctx.stroke();
-            lines.push(x);
-            lines.sort((a, b) => a >= b);
+            verticalLines.push(x);
+            verticalLines.sort((a, b) => a >= b);
           }
           else if (lineMode === 'horizontal') {
             const rect = canvas.getBoundingClientRect();
@@ -109,29 +121,37 @@
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 2;
             ctx.stroke();
+            horizontalLines.push(y);
+            horizontalLines.sort((a, b) => a >= b);
           }
           else if (lineMode === 'color') {
             const rect = canvas.getBoundingClientRect();
             const x = event.clientX - rect.left;
            const y = event.clientY - rect.top;
            ctx.beginPath()
-
-            
-            let minLine = lines.find(l => l <= x) ?? 0;
-            lines.forEach(l => {
-                console.log(`l: ${l}, x:${x}, minline:${minLine}`);
+           
+            let minLine = verticalLines.find(l => l <= x) ?? 0;
+            verticalLines.forEach(l => {
                 if (l < x && l > minLine) {
                     console.log();
                     minLine = l;
                 }
             })
-           
-            console.log("minLine", minLine);
-            console.log("lines", lines)
-            const maxLine = lines.find(l => l > minLine) ? lines.find(l => l > minLine) - minLine : rect.right; // should be rect.right
+
+            let minHori = horizontalLines.find(l => l <= y) ?? 0;
+            horizontalLines.forEach(l => {
+                if (l < y && l > minHori) {
+                    minHori = l;
+                }
+            });
+            console.log("horizontalLines", horizontalLines);
+            const maxHori = horizontalLines.find(l => l > minHori) ? horizontalLines.find(l => l > minHori) - minHori : rect.bottom; // should b
+            console.log("minHori", minHori);
+            // console.log("lines", verticalLines)
+            const maxLine = verticalLines.find(l => l > minLine) ? verticalLines.find(l => l > minLine) - minLine : rect.right; // should be rect.right
             // ctx.rect(minLine, y, maxLine - minLine, rect.bottom);
-            ctx.rect(minLine, y, maxLine, rect.bottom);
-            ctx.fillStyle = "red";
+            ctx.rect(minLine, minHori, maxLine, maxHori);
+            ctx.fillStyle = colors[colorIndex];
             ctx.fill();
 
           }
