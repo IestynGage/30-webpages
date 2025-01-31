@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live HTML Editor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            font-family: monospace;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            outline: none;
+        }
+        .url-box {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+        .url-box:hover {
+            background-color: #0056b3;
+        }
+        iframe {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Live HTML Editor</h2>
+        <textarea id="htmlInput" placeholder="Type your HTML here..."></textarea>
+        <button class="url-box" id="urlBox">Open in New Tab</button>
+        <h3>Preview:</h3>
+        <iframe id="preview"></iframe>
+    </div>
+    <script>
+      const url = new URL(window.location.href);
+      const pageContent = url.searchParams.get("p");
+
+      if (pageContent !== null) {
+
+        document.getElementsByTagName('head')[0].remove(); 
+        document.getElementsByTagName('body')[0].remove();
+        document.getElementsByTagName('html')[0].innerHTML = pageContent
+      }
+
+      const htmlInput = document.getElementById('htmlInput');
+      const urlBox = document.getElementById('urlBox');
+      const previewBox = document.getElementById('preview');
+
+      htmlInput.addEventListener('input', function() {
+          const content = htmlInput.value;
+          const iframe = previewBox.contentDocument;
+          iframe.open();
+          iframe.write(`<!DOCTYPE html><html lang="en">${content}</html>`);
+          iframe.close();
+      });
+
+      urlBox.addEventListener('click', function() {
+        const content = htmlInput.value;
+        const params = new URLSearchParams();
+        params.append("p", content);
+        window.location.href = `${window.location.href}?${params}`;
+      })
+    </script>
+</body>
+</html>
