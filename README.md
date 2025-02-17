@@ -16,3 +16,6 @@ After the 30 pages are done I'll go over each page and aswer any questions I had
 * `07-static-tv` - Displays tv static.
 * `08-piano` - A simple piano that you can play.
 * `09-random-button-style` A single button that changes it's style afte being pressed.
+* `10-mr-mondrian-cubes` - A canvas drawing game to create mondrian cube like paintings
+* `11-html-in-url` - Re-creates simple html pages using a the url.
+* `12-day-percentage` - Percetange of the day that has passed.
