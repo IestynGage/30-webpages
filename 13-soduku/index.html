@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Sudoku</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .sudoku-container {
+            display: grid;
+            grid-template-columns: repeat(9, 40px);
+            grid-template-rows: repeat(9, 40px);
+            gap: 2px;
+            padding: 10px;
+            background-color: black;
+        }
+        .soduke-cell {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            align-content: center;
+            font-size: 20px;
+            border: none;
+            background: white;
+            cursor: pointer;
+        }
+        .soduke-cell[readonly] {
+            background: #ddd;
+            font-weight: bold;
+            cursor:default;
+        }
+        .soduke-cell[selected] {
+          border: blue 1px solid;
+          height: 38px;
+          width: 38px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sudoku-container" id="sudoku-grid"></div>
+    <script>
+        const puzzle = [
+            [5, 3, '', '', 7, '', '', '', ''],
+            [6, '', '', 1, 9, 5, '', '', ''],
+            ['', 9, 8, '', '', '', '', 6, ''],
+            [8, '', '', '', 6, '', '', '', 3],
+            [4, '', '', 8, '', 3, '', '', 1],
+            [7, '', '', '', 2, '', '', '', 6],
+            ['', 6, '', '', '', '', 2, 8, ''],
+            ['', '', '', 4, 1, 9, '', '', 5],
+            ['', '', '', '', 8, '', '', 7, 9]
+        ];
+
+        const grid = document.getElementById("sudoku-grid");
+        let selectedCell = null;
+        puzzle.forEach(row => {
+            row.forEach(value => {
+                const cell = document.createElement("div");
+                cell.className = 'soduke-cell';
+                if (value) {
+                    cell.textContent = value;
+                    cell.setAttribute("readonly", true);
+                } 
+                grid.appendChild(cell);
+            });
+        });
+        grid.addEventListener("click", (e) => {
+          const targetCell = e.target;
+          e.target.setAttribute("selected", true);
+          if (selectedCell !== null && targetCell !== selectedCell) {
+            selectedCell.removeAttribute("selected");
+          }
+          selectedCell = e.target;
+        });
+        window.addEventListener("keydown", (e) => {
+          const keyCode = e.keyCode;
+          if (keyCode >= 48 && keyCode <= 57 && selectedCell.getAttribute("readonly") === null) {
+            selectedCell.textContent = e.key;
+          }
+        });
+    </script>
+</body>
+</html>
