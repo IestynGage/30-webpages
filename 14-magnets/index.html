@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centered div</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        /* .grid {
+          
+        } */
+
+        body {
+            /* display: flex;
+            justify-content: center;
+            align-items: center; */
+            display: grid;
+            padding: 50px;
+            justify-content: space-between;
+            grid-template-columns: repeat(20, 12px);
+  /* grid-gap: 0.5rem; */
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        div {
+          padding: 0;
+            /* font-size: 24px; */
+            width: 20px;
+            height: 12px;
+            font-weight: bold;
+            color: #333;
+            background: lightblue;
+            /* padding: 10px 20px; */
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body id="body">
+  <script>
+    const divs = document.body.getElementsByTagName('div');
+    const body = document.getElementById("body");
+
+    function rotateToMouse(elem, mouseX, mouseY) {
+      const dy = mouseY - (elem.offsetTop + (elem.offsetHeight/2));
+      const dx = mouseX - (elem.offsetLeft + (elem.offsetWidth/2));
+      const deg = (Math.atan2(dy, dx) * 180) / Math.PI;
+
+      elem.style.transform = `rotate(${(deg + 90)}deg)`;
+    }
+
+    function createMagnets() {
+      const amountColumns = Math.floor((window.innerWidth - 100) / 30);
+      const amountRows = Math.floor((window.innerHeight - 100) / 30);
+      const totalElem = (amountColumns * amountRows);
+      let newChildren = [];
+      for(let i = 0; i < totalElem; i++) {
+        newChildren.push(document.createElement("div"));
+      }
+
+      body.replaceChildren(...newChildren);
+      body.style.gridTemplateColumns = `repeat(${amountColumns}, 12px)`;
+    }
+
+    createMagnets();
+    window.addEventListener('resize', () => {
+      createMagnets();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+     for (let divElem of divs) {
+        rotateToMouse(divElem, e.clientX, e.clientY);
+      }
+    });
+  </script>
+</body>
+</html>
