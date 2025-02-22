@@ -37,9 +37,9 @@
     function rotateToMouse(elem, mouseX, mouseY) {
       const dy = mouseY - (elem.offsetTop + (elem.offsetHeight/2));
       const dx = mouseX - (elem.offsetLeft + (elem.offsetWidth/2));
-      const deg = (Math.atan2(dy, dx) * 180) / Math.PI;
+      const deg = Math.atan2(dy, dx);
 
-      elem.style.transform = `rotate(${(deg + 90)}deg)`;
+      elem.style.transform = `rotate(${(deg + 1.5708)}rad)`;
     }
 
     function createMagnets() {
