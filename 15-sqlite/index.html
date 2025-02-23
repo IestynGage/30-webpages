@@ -169,7 +169,21 @@
 
         
         function exportLog() {
-            console.log("Export button clicked");
+          const byteArray = sqlite.capi.sqlite3_js_db_export(db);
+
+          const blob = new Blob([byteArray.buffer], {type:"application/x-sqlite3"});
+          const a = document.createElement('a');
+          document.body.appendChild(a);
+          a.href = window.URL.createObjectURL(blob);
+          a.download = (db.filename.split('/').pop() || "my.sqlite3");
+          a.addEventListener('click',function(){
+          setTimeout(function(){
+          console.log("Exported (possibly auto-downloaded) database");
+          window.URL.revokeObjectURL(a.href);
+          a.remove();
+          },500);
+          });
+          a.click();
         }
     </script>
 </body>
