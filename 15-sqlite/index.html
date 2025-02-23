@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQLlite DB tool</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 98vh;
+            margin: 0;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 10px;
+        }
+        .tab {
+            padding: 10px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            background: #f1f1f1;
+        }
+        .tab.active {
+            background: white;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 80%;
+        }
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+        input {
+            flex-grow: 1;
+            padding: 5px;
+        }
+        button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="jswasm/sqlite3.js"></script>
+</head>
+<body>
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('query')">Query</div>
+        <div class="tab" onclick="switchTab('data')">Data</div>
+    </div>
+    <div id="data" class="tab-content"></div>
+    <div id="query" class="tab-content active">
+      <div id="log"></div>
+        <div class="input-container">
+            <input type="text" id="textbox" placeholder="Enter SQL query...">
+            <button onclick="execute()">Execute</button>
+            <button onclick="exportLog()">Export</button>
+        </div>
+    </div>
+    
+    <script>
+
+      const dataTabElem = document.getElementById('data');
+
+      function executeStmt(stmt) {
+        let resultRows = [];
+        db.exec({
+              sql: stmt,
+              rowMode: 'object',
+              resultRows
+        });
+        return resultRows;
+      }
+        function switchTab(tabName) {
+          document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+          document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+          document.getElementById(tabName).classList.add('active');
+          document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+
+          if (tabName === 'data') {
+            let resultRows = [];
+            db.exec({
+              sql: "SELECT * FROM t",
+              rowMode: 'object',
+              resultRows: resultRows
+            });
+            console.log("resultRows", resultRows);
+            const table = document.createElement("table");
+            const headerNames = Object.keys(resultRows[0]);
+            
+            const header = document.createElement("thead");
+            table.appendChild(header)
+            const headerRow = document.createElement("tr");
+            header.appendChild(headerRow);
+            for (let header = 0; header < headerNames.length; header++) {
+              const headerCell = document.createElement("th");
+              headerCell.textContent = headerNames[header];
+              headerRow.appendChild(headerCell)
+            }
+
+            for (let r = 0; r< resultRows.length; r++) {
+              const columns = Object.entries(resultRows[r])
+              const row = document.createElement("tr");
+              table.appendChild(row);
+              for (let c = 0; c< columns.length; c++) {
+                const cell = document.createElement("td");
+                cell.textContent = columns[c][1];
+                row.appendChild(cell);
+              }
+            }
+
+
+            dataTabElem.replaceChildren(table)
+          }
+        }
+        
+        function execute() {
+            const textbox = document.getElementById("textbox");
+            const log = document.getElementById("log");
+            if (textbox.value.trim() !== "") {
+                const message = document.createElement("div");
+                message.textContent = textbox.value;
+                log.appendChild(message);
+                textbox.value = "";
+                log.scrollTop = log.scrollHeight;
+                
+                console.log(message.textContent);
+                let resultRows = [];
+                db.exec({
+                    sql: message.textContent,
+                    rowMode: 'object',
+                    resultRows: resultRows
+                });
+                console.log("resultRows", resultRows);
+            }
+        }
+        
+        let sqlite = null;
+        let capi = null;
+        let oo = null;
+        let db = null;
+        globalThis.sqlite3InitModule().then(function(sqlite3){
+            try {
+                sqlite = sqlite3;
+                capi = sqlite3.capi;
+                oo = sqlite3.oo1;
+                db = new oo.DB("/mydb.sqlite3", 'ct');
+
+                executeStmt("CREATE TABLE IF NOT EXISTS t(a,b)");
+                executeStmt("insert into t(a,b) values(99,100)");
+            } catch(e) {
+                console.error("Exception:", e.message);
+            }
+        });
+
+        
+        function exportLog() {
+            console.log("Export button clicked");
+        }
+    </script>
+</body>
+</html>
