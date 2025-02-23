@@ -19,3 +19,5 @@ After the 30 pages are done I'll go over each page and aswer any questions I had
 * `10-mr-mondrian-cubes` - A canvas drawing game to create mondrian cube like paintings
 * `11-html-in-url` - Re-creates simple html pages using a the url.
 * `12-day-percentage` - Percetange of the day that has passed.
+* `13-soduku` - A soduku game that uses one event listner to get which cell was selected.
+* `14-magnets` - A fun background that has magnets face the mouse.
