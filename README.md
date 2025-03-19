@@ -21,3 +21,4 @@ After the 30 pages are done I'll go over each page and aswer any questions I had
 * `12-day-percentage` - Percetange of the day that has passed.
 * `13-soduku` - A soduku game that uses one event listner to get which cell was selected.
 * `14-magnets` - A fun background that has magnets face the mouse.
+* `15-sqlite` - SQL query tool that allows you to export your created tables.
