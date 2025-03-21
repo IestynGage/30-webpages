@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classic Quote Display</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classic Quote Display</title>
     <style>
         body {
             display: flex;
@@ -46,17 +46,42 @@
         .next-button:hover {
             background-color: #555;
         }
+        @keyframes fadeToWhite {
+          from {
+            color: black;
+          }
+          to {
+            color: white;
+          }
+        }
+
+        @keyframes fadeToBlack {
+          from {
+            color: white;
+          }
+          to {
+            color: black;
+          }
+        }
+
+        .turn-to-white {
+            animation: fadeToWhite 0.5s ease-in-out forwards;
+        }
+
+        .turn-to-black {
+            animation: fadeToBlack 0.5s ease-in-out forwards;
+        }
     </style>
 </head>
 <body>
   <div class="quote-container">
-    <p class="quote" id="quote-text">"The only limit to our realization of tomorrow is our doubts of today."</p>
-    <p class="author" id="quote-author">- Franklin D. Roosevelt</p>
+    <p id="quote-text" class="quote">"The only limit to our realization of tomorrow is our doubts of today."</p>
+    <p id="quote-author" class="author">- Franklin D. Roosevelt</p>
     <button id="next-button" class="next-button">Next quote</button>
   </div>
   <script>
-    const quoteText = document.getElementById('quote-text');
-    const author = document.getElementById('quote-author');
+    const quoteTxt = document.getElementById('quote-text');
+    const authorTxt = document.getElementById('quote-author');
     const nextQuoteBtn = document.getElementById('next-button');
     let quotes = [];
 
@@ -67,12 +92,21 @@
 
     const loadNewQuote = () => {
       const newQuote = quotes[Math.floor(Math.random() * quotes.length)];
-      quoteText.textContent = newQuote.quote;
-      author.textContent = newQuote.author;
+      quoteTxt.textContent = `"${newQuote.quote}"`;
+      authorTxt.textContent = newQuote.author;
     }
 
+    const timeout = null;
     nextQuoteBtn.addEventListener('click', () => {
-      loadNewQuote();
+      quoteTxt.className = 'turn-to-white quote';
+      // authorTxt.className = 'turn-to-white author';
+      
+      clearTimeout(timeout); 
+      timeout = setTimeout(() => {
+        loadNewQuote();
+        quoteTxt.className = 'turn-to-black quote';
+        // authorTxt.className = 'turn-to-black author'
+      }, 500);
     });
 
   </script>
