@@ -63,6 +63,7 @@
     fetch('quotes.json')
       .then(response => response.json())
       .then(data => quotes = data)
+      .then(() => loadNewQuote());
 
     const loadNewQuote = () => {
       const newQuote = quotes[Math.floor(Math.random() * quotes.length)];
