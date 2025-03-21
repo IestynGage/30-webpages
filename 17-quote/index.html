@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic Quote Display</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f1ea;
+            font-family: "Georgia", serif;
+            text-align: center;
+            margin: 0;
+        }
+        .quote-container {
+            max-width: 600px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        .quote {
+            font-size: 1.8em;
+            font-style: italic;
+            color: #333;
+        }
+        .author {
+            margin-top: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #555;
+        }
+        .next-button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .next-button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+  <div class="quote-container">
+    <p class="quote" id="quote-text">"The only limit to our realization of tomorrow is our doubts of today."</p>
+    <p class="author" id="quote-author">- Franklin D. Roosevelt</p>
+    <button id="next-button" class="next-button">Next quote</button>
+  </div>
+  <script>
+    const quoteText = document.getElementById('quote-text');
+    const author = document.getElementById('quote-author');
+    const nextQuoteBtn = document.getElementById('next-button');
+    let quotes = [];
+
+    fetch('quotes.json')
+      .then(response => response.json())
+      .then(data => quotes = data)
+
+    const loadNewQuote = () => {
+      const newQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      quoteText.textContent = newQuote.quote;
+      author.textContent = newQuote.author;
+    }
+
+    nextQuoteBtn.addEventListener('click', () => {
+      loadNewQuote();
+    });
+
+  </script>
+</body>
+</html>
