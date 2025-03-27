@@ -99,14 +99,12 @@
     const timeout = null;
     nextQuoteBtn.addEventListener('click', () => {
       quoteTxt.className = 'turn-to-white quote';
-      // authorTxt.className = 'turn-to-white author';
       
       clearTimeout(timeout); 
       timeout = setTimeout(() => {
         loadNewQuote();
         quoteTxt.className = 'turn-to-black quote';
-        // authorTxt.className = 'turn-to-black author'
-      }, 500);
+      }, 1_000);
     });
 
   </script>
