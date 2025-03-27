@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Loss Counter</title>
+    <link rel="stylesheet" href="a.css">
+</head>
+<body>
+    <div class="dial-container">
+        <h1>Trees cut since looking at this page</h1>
+        <div id="dial" class="dial"></div>
+        <footer>
+            <p>Sources: <a href="https://www.wwf.org.uk/learn/effects-of/deforestation">WWF</a></p>
+        </footer>
+    </div>
+
+    <script>
+        let number = 0;
+        const dialDiv = document.getElementById("dial");
+        setInterval(() => {
+            number += 486;
+            dialDiv.style.setProperty("--num", number);
+        }, 1000);
+    </script>
+</body>
+</html>
