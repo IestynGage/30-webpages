@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Type test</title>
+    <link rel="stylesheet" href="type-test.css">
+</head>
+<body>
+  <div>
+    <div>
+      Timer: <span id="timer"> 60 </span> seconds
+    </div>
+    <div class="content">
+      <div class="layer1">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, 
+        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+        Excepteur sint occaecat cupidatat non proident, 
+        sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </div>
+      <div id="typed-content" class="layer2">
+      </div>
+    </div>
+  </div>
+  <script>
+    const typedContentDiv = document.getElementById("typed-content");
+    const timerSpan = document.getElementById("timer");
+    const contentToType = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
+    
+    let typed = '';
+    let typedLettersIndex = 0;
+    let time = 60;
+    let isCurrentlyBroken = false;
+    let timeTestOver = false;
+    let timeLimit = null;
+    let timeInterval = null;
+    
+    window.addEventListener('keydown', (e) => {
+      if (timeInterval === null) {
+        startTimer();
+      }
+
+      if (timeTestOver) {
+        return;
+      }
+      
+      const expectedChar = contentToType.charAt(typedLettersIndex);
+      const typedChar = e.key;
+
+      if (acceptedChar(typedChar)) {
+        if (isCurrentlyBroken) {
+          if (expectedChar === typedChar) {
+            typed = typed + '</mark>';
+            isCurrentlyBroken = false;
+          }
+        }
+
+        if (expectedChar !== typedChar && isCurrentlyBroken === false) {
+          typed = typed + '<mark>';
+          isCurrentlyBroken = true;
+        }
+
+        typed = typed + expectedChar;
+        typedContentDiv.innerHTML = typed;
+        typedLettersIndex = typedLettersIndex + 1;
+      }
+    });
+
+    function acceptedChar(char) {
+      // todo
+      return true;
+    }
+
+    function startTimer() {
+      timeLimit = new Date();
+      timeLimit.setSeconds(timeLimit.getSeconds() + 60);
+  
+      timeInterval = setInterval(() => {
+        var endDate   = new Date();
+        var seconds = Math.round((timeLimit.getTime() - endDate.getTime()) / 100) / 10;
+        time = seconds;
+        timerStarted = true;
+        timerSpan.textContent = time;
+        if (time <= 0) {
+          time = 0;
+          timeTestOver = true;
+          clearInterval(timeInterval); 
+        };
+      });
+    }
+
+  </script>
+</body>
+</html>

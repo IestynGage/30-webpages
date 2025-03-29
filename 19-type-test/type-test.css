@@ -1,0 +1,44 @@
+:root {
+  --background-yellow: #FFC107;
+  --typed: #0d0d0d90;
+  --to-be-typed: #2C2C2C;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--background-yellow);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  margin: 0;
+}
+
+.content {
+  font-size: 1.2rem;
+  max-width: 600px;
+  padding: 20px;
+  margin-top: 20px;
+  display: grid;
+}
+
+.layer1, .layer2{
+  text-align: left;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.layer1 {
+  color: var(--typed);
+}
+
+.layer2 {
+  color: var(--to-be-typed);
+}
+
+mark {
+  background-color: #d32f2ff1;
+  border-radius: 5px;
+}
