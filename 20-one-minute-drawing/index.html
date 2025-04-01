@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fullscreen Canvas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            draw();
+        }
+
+        function draw() {
+            ctx.fillStyle = "#F9F6EE";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        window.addEventListener("resize", resizeCanvas);
+
+        window.addEventListener('mousemove', (e) => {
+            console.log(e.x + " " + e.y);
+        })
+
+        window.addEventListener('mousedown', (e) => {
+            console.log("Pressed down")
+        });
+
+        window.addEventListener('mouseup', (e) => {
+            console.log("Pressed up")
+        });
+        
+        resizeCanvas();
+    </script>
+</body>
+</html>
