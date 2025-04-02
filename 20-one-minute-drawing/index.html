@@ -26,30 +26,67 @@
             padding: 1rem 0;
         }
         #clock {
-            padding: 0.6rem;
+            /* padding: 0.6rem;
             border: 0.1rem solid black;
             border-radius: 1rem;
             width: 45px;
-            background-color: #fbfbfb;
+            background-color: #fbfbfb; */
             text-align: center;
+        }
+        .a {
+            padding: 0.6rem;
+            border: 0.1rem solid black;
+            border-radius: 1rem;
+            background-color: #fbfbfb;
+        }
+        #start-scene {
+            position: absolute;
+            font-size: 1.2rem;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+        }
+        #draw-scene {
+            visibility: hidden;
         }
     </style>
 </head>
 <body>
-    <div id="timer-wrapper" style="position: absolute;">
-        <div id="clock" >
-            timer
-        </div>
+    <div id="start-scene">
+        <button id="start-btn" > Start </button>
     </div>
-    <canvas id="myCanvas"></canvas>
+    <div id="draw-scene">
+        <div id="timer-wrapper">
+            <div class="a">
+                Draw a <span id="draw-prompt"></span>
+                <div id="clock" >
+                    timer
+                </div>
+            </div>
+        </div>
+        <canvas id="draw-canvas"></canvas>
+    </div>
     <script>
-        const canvas = document.getElementById("myCanvas");
+        const canvas = document.getElementById("draw-canvas");
+        const startScene = document.getElementById("start-scene");
+        const drawScene = document.getElementById("draw-scene");
+        const startBtn = document.getElementById("start-btn");
         const timerDiv = document.getElementById("clock");
+        const timeWrapperDiv = document.getElementById("timer-wrapper");
+        const drawPromptSpan = document.getElementById("draw-prompt");
         const ctx = canvas.getContext("2d");
-        let isDrawModeActive = false;
+
+        let isDrawing = false;
+        let isGameActive = false;
         let lastX = 0;
         let lastY = 0;
         let time = 60;
+        let prompts = undefined;
+
+        fetch('drawing-prompt.json')
+            .then(response => response.json())
+            .then(data => prompts = data)
 
         /**
          * Sets the canvas size and pixel density.
@@ -66,23 +103,27 @@
             canvas.width = width * devicePixelRatio;
             canvas.height = height * devicePixelRatio;
             ctx.scale(devicePixelRatio, devicePixelRatio);
-            draw();
+            drawEmptyCanvas();
         }
 
-        function draw() {
+        function drawEmptyCanvas() {
             ctx.fillStyle = "#F9F6EE";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
+
+        startBtn.addEventListener('mousedown', () => {
+            startScene.style.visibility = 'hidden';
+            drawScene.style.visibility = 'visible';
+            initGame();
+        })
 
         window.addEventListener("resize", resizeCanvas);
 
         window.addEventListener('mousemove', (e) => {
             if (e.buttons === 0) {
-                // A mousedown event isn't always triggered
-                isDrawModeActive = false;
+                isDrawing = false;
             }
-            if (isDrawModeActive) {
-                console.log(e.x + " " + e.y);
+            if (isDrawing && isGameActive) {
                 ctx.beginPath();
                 ctx.lineWidth = 2;
                 ctx.lineCap = 'round';
@@ -96,17 +137,26 @@
             } 
         })
 
+        function initGame() {
+            let isDrawModeActive = false;
+            drawEmptyCanvas();
+            drawPromptSpan.textContent = prompts[Math.floor(Math.random() * prompts.length)];
+            time = 60;
+            startTimer();
+        }
+
         window.addEventListener('mousedown', (e) => {
             lastX = e.x;
             lastY = e.y;
-            isDrawModeActive = true;
+            isDrawing = true;
         });
 
         window.addEventListener('mouseup', (e) => {
-            isDrawModeActive = false;
+            isDrawing = false;
         });
 
         function startTimer() {
+            isGameActive = true;
             timeLimit = new Date();
             timeLimit.setSeconds(timeLimit.getSeconds() + 60);
         
@@ -114,17 +164,16 @@
                 var endDate   = new Date();
                 var seconds = Math.round((timeLimit.getTime() - endDate.getTime()) / 1000);
                 time = seconds;
-                // timerStarted = true;
                 timerDiv.textContent = time;
                 if (time <= 0) {
                     time = 0;
-                    // timeTestOver = true;
+                    isGameActive = false;
+                    timeWrapperDiv.innerHTML = '<div class="a"> Drawing finished! </div>'
                     clearInterval(timeInterval); 
                 };
             });
         }
-        startTimer();
-        
+    
         resizeCanvas();
     </script>
 </body>
