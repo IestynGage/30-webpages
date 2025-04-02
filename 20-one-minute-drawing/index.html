@@ -12,6 +12,7 @@
         }
         canvas {
             display: block;
+            cursor: url('pencil.svg'), default;
         }
     </style>
 </head>
@@ -20,10 +21,25 @@
     <script>
         const canvas = document.getElementById("myCanvas");
         const ctx = canvas.getContext("2d");
+        let isDrawModeActive = false;
+        let lastX = 0;
+        let lastY = 0;
 
+        /**
+         * Sets the canvas size and pixel density.
+         * 
+         * @link https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio
+         **/
         function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const devicePixelRatio = window.devicePixelRatio;
+
+            canvas.style.width = width + "px";
+            canvas.style.height = height + "px";
+            canvas.width = width * devicePixelRatio;
+            canvas.height = height * devicePixelRatio;
+            ctx.scale(devicePixelRatio, devicePixelRatio);
             draw();
         }
 
@@ -35,15 +51,33 @@
         window.addEventListener("resize", resizeCanvas);
 
         window.addEventListener('mousemove', (e) => {
-            console.log(e.x + " " + e.y);
+            if (e.buttons === 0) {
+                // A mousedown event isn't always triggered
+                isDrawModeActive = false;
+            }
+            if (isDrawModeActive) {
+                console.log(e.x + " " + e.y);
+                ctx.beginPath();
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(e.x + 0.5, e.y + 0.5);
+                ctx.fillStyle = 'black';
+                ctx.stroke();
+                lastX = e.x + 0.5;
+                lastY = e.y + 0.5;
+            } 
         })
 
         window.addEventListener('mousedown', (e) => {
-            console.log("Pressed down")
+            lastX = e.x;
+            lastY = e.y;
+            isDrawModeActive = true;
         });
 
         window.addEventListener('mouseup', (e) => {
-            console.log("Pressed up")
+            isDrawModeActive = false;
         });
         
         resizeCanvas();
