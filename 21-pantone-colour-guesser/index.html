@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pantone colour guesser</title>
+    <style>
+        * {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        }
+
+      #background {
+        width: 100vw;
+        height: 100vh;
+        padding: 0;
+      }
+      body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .answer {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .answer > h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+        .answer > p {
+            font-size: 1.5em;
+            margin: 10px 0 0;
+        }
+    </style>
+</head>
+<body id="background">
+  <div id="name-color" class="container">
+    <h2>Name the color</h2>
+    <form onsubmit="guessColor(event)">
+      <select id="guess-input">
+        <option value="Cerulean">Cerulean</option>
+        <option value="Fuchsia Rose">Fuchsia Rose</option>
+        <option value="True Red">True Red</option>
+        <option value="Aqua sky">Aqua sky</option>
+        <option value="Tigerlily">Tigerlily</option>
+        <option value="Blue Turquoise">Blue Turquoise</option>
+        <option value="Sand Dollar">Sand Dollar</option>
+        <option value="Chili Pepper">Chili Pepper</option>
+        <option value="Blue Iris">Blue Iris</option>
+        <option value="Mimosa">Mimosa</option>
+        <option value="Turquoise">Turquoise</option>
+        <option value="Honeysuckle">Honeysuckle</option>
+        <option value="Tangerine Tango">Tangerine Tango</option>
+        <option value="Emerald">Emerald</option>
+        <option value="Radiant Orchid">Radiant Orchid</option>
+        <option value="Marsala">Marsala</option>
+        <option value="Rose Quartz">Rose Quartz</option>
+        <option value="Serenity">Serenity</option>
+        <option value="Greenery">Greenery</option>
+        <option value="Ultra Violet">Ultra Violet</option>
+        <option value="Living Coral">Living Coral</option>
+        <option value="Classic Blue">Classic Blue</option>
+        <option value="Illuminating">Illuminating</option>
+        <option value="Ultimate Grey">Ultimate Grey</option>
+        <option value="Very Peri">Very Peri</option>
+        <option value="Viva Magenta">Viva Magenta</option>
+        <option value="Peach Fuzz">Peach Fuzz</option>
+        <option value="Mocha Mousse">Mocha Mousse</option>
+      </select>
+      <button type="submit">Enter</button>
+    </form>
+  </div>
+  <div id="answer" class="answer" style="display:none">
+    <h1>Pantone Color of the Year</h1>
+    <p id="is-correct"></p>
+    <p id="answer-p">2023 - Viva Magenta</p>
+    <button id="next-color">Next</button>
+  </div>
+  <script>
+    const backgroundDiv = document.getElementById("background");
+    const nameColorContainerDiv = document.getElementById("name-color");
+    const answerContainerDiv = document.getElementById("answer");
+    const anwerPar = document.getElementById("answer-p");
+    const isCorrectPar = document.getElementById("is-correct");
+    const nextColorBtn = document.getElementById("next-color");
+    const guessTextInput = document.getElementById("guess-input");
+
+    let pantoneColors = null;
+    let currentColor = null;
+
+    nextColorBtn.addEventListener("click", () => {
+      selectNewColor();
+    });
+
+    fetch("colors.json")
+      .then(res => res.json())
+      .then(d => pantoneColors = d)
+      .then(() => selectNewColor());
+
+    function selectNewColor() {
+      answerContainerDiv.style = "display:none";
+      nameColorContainerDiv.style = "" 
+      guessTextInput.value = "";
+      currentColor = pantoneColors[Math.floor(Math.random() * pantoneColors.length)];
+      backgroundDiv.style.backgroundColor = currentColor.color;
+    }
+
+    function guessColor(event) {
+      event.preventDefault();
+      anwerPar.textContent = `${currentColor.year} - ${currentColor.name}`;
+      if (guessTextInput.value === currentColor.name) {
+        isCorrectPar.textContent = "Correct!"
+      } else {
+        isCorrectPar.textContent = "Wrong!";
+      }
+      answerContainerDiv.style = "";
+      nameColorContainerDiv.style = "display:none" 
+    }
+
+  </script>
+</body>
+</html>

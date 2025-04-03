@@ -1,0 +1,142 @@
+[
+  {
+    "name": "Cerulean",
+    "year": "2000",
+    "color": "#9cb7d4"
+  },
+  {
+    "name": "Fuchsia Rose",
+    "year": "2001",
+    "color": "#c24071"
+  },
+  {
+    "name": "True Red",
+    "year": "2002",
+    "color": "#c11734"
+  },
+  {
+    "name": "Aqua sky",
+    "year": "2003",
+    "color": "#7ac4c5"
+  },
+  {
+    "name": "Tigerlily",
+    "year": "2004",
+    "color": "#e3583e"
+  },
+  {
+    "name": "Blue Turquoise",
+    "year": "2005",
+    "color": "#52b1ad"
+  },
+  {
+    "name": "Sand Dollar",
+    "year": "2006",
+    "color": "#dfcebe"
+  },
+  {
+    "name": "Chili Pepper",
+    "year": "2007",
+    "color": "#9b1a30"
+  },
+  {
+    "name": "Blue Iris",
+    "year": "2008",
+    "color": "#595c9f"
+  },
+  {
+    "name": "Mimosa",
+    "year": "2009",
+    "color": "#f1c05a"
+  },
+  {
+    "name": "Turquoise",
+    "year": "2010",
+    "color": "#4ab4aa"
+  },
+  {
+    "name": "Honeysuckle",
+    "year": "2011",
+    "color": "#db4e71"
+  },
+  {
+    "name": "Tangerine Tango",
+    "year": "2012",
+    "color": "#df4124"
+  },
+  {
+    "name": "Emerald",
+    "year": "2013",
+    "color": "#009474"
+  },
+  {
+    "name": "Radiant Orchid",
+    "year": "2014",
+    "color": "#ac5e98"
+  },
+  {
+    "name": "Marsala",
+    "year": "2015",
+    "color": "#964e4f"
+  },
+  {
+    "name": "Rose Quartz",
+    "year": "2016",
+    "color": "#92a8d1"
+  },
+  {
+    "name": "Serenity",
+    "year": "2016",
+    "color": "#f7c9cb"
+  },
+  {
+    "name": "Greenery",
+    "year": "2017",
+    "color": "#8bb14c"
+  },
+  {
+    "name": "Ultra Violet",
+    "year": "2018",
+    "color": "#604c8b"
+  },
+  {
+    "name": "Living Coral",
+    "year": "2019",
+    "color": "#ff7060"
+  },
+  {
+    "name": "Classic Blue",
+    "year": "2020",
+    "color": "#0f4c82"
+  },
+  {
+    "name": "Illuminating",
+    "year": "2021",
+    "color": "#f5e04c"
+  },
+  {
+    "name": "Ultimate Grey",
+    "year": "2021",
+    "color": "#939597"
+  },
+  {
+    "name": "Very Peri",
+    "year": "2022",
+    "color": "#6768ab"
+  },
+  {
+    "name": "Viva Magenta",
+    "year": "2023",
+    "color": "#bc2649"
+  },
+  {
+    "name": "Peach Fuzz",
+    "year": "2024",
+    "color": "#f7c19f"
+  },
+  {
+    "name": "Mocha Mousse",
+    "year": "2025",
+    "color": "#9f7a68"
+  }
+]
