@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centered Circle</title>
+  <style>
+    :root {
+      --coin-size: 150px;
+    }
+    body, html {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f0f0;
+    }
+    #coin-wrapper {
+      perspective: 100px;
+      transform-style: preserve-3d;
+    }
+    .coin {
+      width: var(--coin-size);
+      height: var(--coin-size);
+      background-color: #3498db;
+      border-radius: 50%;
+      backface-visibility: hidden;
+    }
+    .backface {
+      transform: rotateY(.5turn);
+      background-color: red;
+      position: relative;
+      top: calc(var(--coin-size) * -1);
+    }
+  </style>
+</head>
+<body>
+  <div id="coin-wrapper">
+    <div id="coin-front" class="coin"> </div>
+    <div id="coin-back"class="coin backface"> </div>
+    </div>
+  </div>
+  <script>
+    const coin = document.getElementById("coin-wrapper");
+    const coinFront = document.getElementById("coin-front");
+    const coinBack = document.getElementById("coin-back");
+
+    let rotateAmount = 0;
+    let rotateInterval = null;
+
+    coinFront.addEventListener('click', () => {
+      startToss();
+    })
+    coinBack.addEventListener('click', () => {
+      startToss();
+    })
+
+    function startToss() {
+      const isRed = Math.random() > 0.5;
+      console.log("isRed", isRed)
+      const forceToss = isRed ? 180 : 360;
+      const tossAmount = 360 + (Math.floor(Math.random() * 4) * 360) + forceToss;
+      console.log(tossAmount)
+      rotateInterval = setInterval(() => {
+        rotateAmount = rotateAmount + 2;
+        coin.style.transform = `rotateY(${rotateAmount}deg)`;
+
+        if (rotateAmount === tossAmount) {
+          clearInterval(rotateInterval)
+          rotateAmount = isRed ? 0 : 180;
+        }
+      }, 5);
+    }
+  </script>
+</body>
+</html>
