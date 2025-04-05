@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>5x5 Grid Canvas</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+    }
+    canvas {
+      display: block;
+    }
+    div {
+      display: grid;
+      height: 100vh;
+      width: 100vw;
+      place-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const map = [
+      [0,0,0,0,0],
+      [0,0,0,0,0],
+      [0,0,0,0,0],
+      [0,0,0,0,1],
+      [0,0,0,2,1]
+    ];
+
+    function resizeCanvas() {
+      // canvas.width = window.innerWidth * 0.8;
+      // canvas.height = window.innerHeight * 0.8;
+      
+
+      const width = window.innerHeight * 0.8;
+      const height = window.innerHeight * 0.8;
+      // const width = canvas.parentElement.clientWidth;
+      // const height = canvas.parentElement.clientHeight;
+      const devicePixelRatio = window.devicePixelRatio;
+
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
+      canvas.width = width * devicePixelRatio;
+      canvas.height = height * devicePixelRatio;
+      // ctx.scale(devicePixelRatio , devicePixelRatio);
+      drawGrid();
+    }
+
+    function drawGrid() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const rows = 10;
+      const cols = 10;
+      const cellWidth = canvas.width / cols;
+      const cellHeight = canvas.height / rows;
+
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 1;
+
+      for (let i = 0; i <= cols; i++) {
+        const x = i * cellWidth;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+
+      for (let j = 0; j <= rows; j++) {
+        const y = j * cellHeight;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+  </script>
+</body>
+</html>
