@@ -28,14 +28,53 @@
   </div>
 
   <script>
+    let flagTile = null;
+    let bombTile = null;
+    // fetch('red-flag.png')
+    //   .then(response => {
+    //     if (!response.ok) {
+    //       throw new Error('Network response was not ok');
+    //     }
+    //     return response.blob();
+    //   })
+    //   .then(blob => {
+    //     const imgURL = URL.createObjectURL(blob);
+    //     flagTile = new Image();
+    //     flagTile.src = imgURL;
+    //   })
+    //   .catch(error => {
+    //     console.error('Fetch error:', error);
+    //   });
+
+    async function loadArtAsset(filename) {
+      const res = await fetch(filename);
+      // console.log('res', re)
+      const imgBlob = await res.blob();
+      const imgURL = URL.createObjectURL(imgBlob);
+      const imageObj = new Image();
+      imageObj.src = imgURL;
+
+      return imageObj;
+    }
+    async function loadAllAssets() {
+      flagTile = await loadArtAsset('red-flag.png');
+      bombTile = await loadArtAsset('bomb.png');
+    }
+    loadAllAssets();
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     const map = [
-      [0,0,0,0,0],
-      [0,0,0,0,0],
-      [0,0,0,0,0],
-      [0,0,0,0,1],
-      [0,0,0,2,1]
+      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
+      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
+      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
+      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
+      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
+      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
+      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
+      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(1, false), tile(1, false), tile(1, false)],
+      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(1, false), tile(undefined, true), tile(1, false)],
+      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(1, false), tile(1, false), tile(1, false)],
+      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
     ];
 
     let canvasBlockSize = null;
@@ -43,8 +82,8 @@
     function resizeCanvas() {
       
         //TODO figure out min of width and height and use that instead
-      const width = window.innerHeight * 0.8;
-      const height = window.innerHeight * 0.8;
+      const width = 500;
+      const height = 500;
       const devicePixelRatio = window.devicePixelRatio;
 
       canvas.style.width = width + "px";
@@ -60,7 +99,7 @@
 
       const rows = 10;
       const cols = 10;
-      canvasBlockSize = (window.innerHeight * 0.8) / cols;
+      canvasBlockSize = 50;
       // const cellHeight = window.innerHeight / rows;
 
       ctx.strokeStyle = '#333';
@@ -81,14 +120,102 @@
         ctx.lineTo(canvas.width, y);
         ctx.stroke();
       }
+
+      for (let rowY = 0; rowY < rows; rowY++) {
+        const paddingY = rowY * canvasBlockSize;
+        for (let colX = 0; colX < cols; colX++) {
+          const x = colX * canvasBlockSize;
+          const tileValue = map[colX][rowY];
+
+          createBackgroundTile(colX, rowY, x, paddingY, '#90d032', '#b8df34');
+          if (tileValue.discovered && tileValue.bomb) {
+            createBackgroundTile(colX, rowY, x, paddingY, '#e2c089', '#dfc971');
+            ctx.drawImage(bombTile, x, paddingY, 50, 50);
+          }
+          else if (tileValue.discovered) {
+
+            createBackgroundTile(colX, rowY, x, paddingY, '#e2c089', '#dfc971');
+            ctx.fillStyle = 'black';
+            ctx.font = "45px Arial";
+            ctx.fillText(tileValue.bombNeighbour, x + 12.5, paddingY + 41.5);
+          }
+          if (tileValue.flag) {
+            ctx.drawImage(flagTile, x, paddingY, 50, 50);
+          }
+        }
+      }
+      
+    }
+
+    function createBackgroundTile(colX, rowY, x, paddingY, colorA, colorB) {
+      ctx.fillStyle =  (colX + rowY) % 2 === 1 ? colorA : colorB;
+      ctx.fillRect(x, paddingY, canvasBlockSize, canvasBlockSize);
+    }
+
+    function tile(bombNeighbour, bomb) {
+      return {
+        discovered: false,
+        flag: false,
+        bombNeighbour: bombNeighbour,
+        bomb: bomb
+      }
     }
 
     window.addEventListener('resize', resizeCanvas);
-    canvas.addEventListener('click', (x) => {
-      const col = Math.floor((x.clientX - canvas.offsetLeft) / canvasBlockSize);
-      const row = Math.floor((x.clientY - canvas.offsetTop) / canvasBlockSize);
+    canvas.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      console.log(".button", e.button);
+      const col = Math.floor((e.clientX - canvas.offsetLeft) / canvasBlockSize);
+      const row = Math.floor((e.clientY - canvas.offsetTop) / canvasBlockSize);
       console.log(`click col ${col} row ${row} `);
+      const value = map[col][row];
+      if (e.button === 0) {
+        value.discovered = true;
+        console.log("discoved", value)
+        if (value.bombNeighbour === 0) {
+          autoDiscoverAll(col, row);
+        }
+      }
+      else if (e.button === 2) {
+        console.log("Inside btn 2")
+        value.flag = !value.flag;
+      }
+      drawGrid();
     })
+
+    function autoDiscoverAll(col, row) {
+      const neighbours = getAllNeighbours(col, row);
+      console.log("neighbours", neighbours)
+      neighbours.forEach(cords => {
+        const tile = map[cords.x][cords.y];
+        if (tile.discovered === false) {
+          tile.discovered = true;
+          if (tile.bombNeighbour === 0) {
+            autoDiscoverAll(cords.x, cords.y);;
+          }
+        }
+      })
+    }
+
+    function getAllNeighbours(inputCol, inputRow) {
+      const rows = [inputRow - 1, inputRow, inputRow + 1];
+      const cols = [inputCol - 1, inputCol, inputCol + 1];
+      const neighbours = [];
+      console.log(rows)
+      rows.forEach(r => {
+        cols.forEach(c => {
+          if (r >= 0 && r < 10 && c >= 0 && c < 10) {
+            neighbours.push({x: c, y: r});
+          }
+        })
+      });
+      console.log("returning neigh", neighbours);
+      return neighbours;
+    }
+  
+    canvas.addEventListener("contextmenu", function (e){
+        e.preventDefault();
+    }, false);
     resizeCanvas();
   </script>
 </body>
