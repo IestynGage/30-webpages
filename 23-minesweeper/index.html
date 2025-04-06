@@ -30,25 +30,9 @@
   <script>
     let flagTile = null;
     let bombTile = null;
-    // fetch('red-flag.png')
-    //   .then(response => {
-    //     if (!response.ok) {
-    //       throw new Error('Network response was not ok');
-    //     }
-    //     return response.blob();
-    //   })
-    //   .then(blob => {
-    //     const imgURL = URL.createObjectURL(blob);
-    //     flagTile = new Image();
-    //     flagTile.src = imgURL;
-    //   })
-    //   .catch(error => {
-    //     console.error('Fetch error:', error);
-    //   });
 
     async function loadArtAsset(filename) {
       const res = await fetch(filename);
-      // console.log('res', re)
       const imgBlob = await res.blob();
       const imgURL = URL.createObjectURL(imgBlob);
       const imageObj = new Image();
@@ -63,21 +47,51 @@
     loadAllAssets();
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
-    const map = [
-      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
-      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
-      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
-      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
-      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
-      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
-      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
-      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(1, false), tile(1, false), tile(1, false)],
-      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(1, false), tile(undefined, true), tile(1, false)],
-      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(1, false), tile(1, false), tile(1, false)],
-      [tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false), tile(0, false)],
-    ];
+    const map = [];
+    function generateMap() {
+      for (let ix = 0; ix < 10; ix++) {
+        const row = []
+        for (let iy = 0; iy < 10; iy++) {
+          row.push(tile(0, false));
+        }
+        map.push(row);
+      }
+      const bombLocations = generateBombs(10);
+      console.log(bombLocations)
+      bombLocations.forEach(b => {
+        map[b.x][b.y].bomb = true;
+        const neighbours = getAllNeighbours(b.x, b.y);
+        neighbours.forEach(t => {
+          const neighbourTile = map[t.x][t.y];
+          neighbourTile.bombNeighbour = neighbourTile.bombNeighbour + 1;
+        });
+      });
+
+
+    }
+    generateMap();
 
     let canvasBlockSize = null;
+
+    function generateBombs(bombAmount) {
+      const bombLocations = new Map();
+      while (bombLocations.size !== bombAmount) {
+        const bomb = {
+          x: randomNumber(10),
+          y: randomNumber(10),
+          toString() {
+            return this.x + " " + this.y;
+          }
+        };
+        bombLocations.set(bomb.toString(), bomb)
+      }
+
+      return bombLocations;
+    }
+
+    function randomNumber(maxExclusive) {
+      return Math.floor(Math.random() * maxExclusive);
+    }
 
     function resizeCanvas() {
       
@@ -164,20 +178,16 @@
     window.addEventListener('resize', resizeCanvas);
     canvas.addEventListener('mousedown', (e) => {
       e.preventDefault();
-      console.log(".button", e.button);
       const col = Math.floor((e.clientX - canvas.offsetLeft) / canvasBlockSize);
       const row = Math.floor((e.clientY - canvas.offsetTop) / canvasBlockSize);
-      console.log(`click col ${col} row ${row} `);
       const value = map[col][row];
       if (e.button === 0) {
         value.discovered = true;
-        console.log("discoved", value)
         if (value.bombNeighbour === 0) {
           autoDiscoverAll(col, row);
         }
       }
       else if (e.button === 2) {
-        console.log("Inside btn 2")
         value.flag = !value.flag;
       }
       drawGrid();
@@ -185,7 +195,6 @@
 
     function autoDiscoverAll(col, row) {
       const neighbours = getAllNeighbours(col, row);
-      console.log("neighbours", neighbours)
       neighbours.forEach(cords => {
         const tile = map[cords.x][cords.y];
         if (tile.discovered === false) {
@@ -201,7 +210,6 @@
       const rows = [inputRow - 1, inputRow, inputRow + 1];
       const cols = [inputCol - 1, inputCol, inputCol + 1];
       const neighbours = [];
-      console.log(rows)
       rows.forEach(r => {
         cols.forEach(c => {
           if (r >= 0 && r < 10 && c >= 0 && c < 10) {
@@ -209,7 +217,7 @@
           }
         })
       });
-      console.log("returning neigh", neighbours);
+
       return neighbours;
     }
   
