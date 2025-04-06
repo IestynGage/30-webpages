@@ -45,9 +45,11 @@
       bombTile = await loadArtAsset('bomb.png');
     }
     loadAllAssets();
+
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     const map = [];
+    const canvasBlockSize = 50;
     function generateMap() {
       for (let ix = 0; ix < 10; ix++) {
         const row = []
@@ -71,8 +73,6 @@
     }
     generateMap();
 
-    let canvasBlockSize = null;
-
     function generateBombs(bombAmount) {
       const bombLocations = new Map();
       while (bombLocations.size !== bombAmount) {
@@ -94,8 +94,6 @@
     }
 
     function resizeCanvas() {
-      
-        //TODO figure out min of width and height and use that instead
       const width = 500;
       const height = 500;
       const devicePixelRatio = window.devicePixelRatio;
@@ -113,8 +111,6 @@
 
       const rows = 10;
       const cols = 10;
-      canvasBlockSize = 50;
-      // const cellHeight = window.innerHeight / rows;
 
       ctx.strokeStyle = '#333';
       ctx.lineWidth = 1;
@@ -148,10 +144,12 @@
           }
           else if (tileValue.discovered) {
 
-            createBackgroundTile(colX, rowY, x, paddingY, '#e2c089', '#dfc971');
-            ctx.fillStyle = 'black';
-            ctx.font = "45px Arial";
-            ctx.fillText(tileValue.bombNeighbour, x + 12.5, paddingY + 41.5);
+            createBackgroundTile(colX, rowY, x, paddingY, '#d7b899', '#dfc971');
+            if (tileValue.bombNeighbour > 0) {
+              ctx.fillStyle = 'black';
+              ctx.font = "45px Arial";
+              ctx.fillText(tileValue.bombNeighbour, x + 12.5, paddingY + 41.5);
+            }
           }
           if (tileValue.flag) {
             ctx.drawImage(flagTile, x, paddingY, 50, 50);
@@ -180,15 +178,19 @@
       e.preventDefault();
       const col = Math.floor((e.clientX - canvas.offsetLeft) / canvasBlockSize);
       const row = Math.floor((e.clientY - canvas.offsetTop) / canvasBlockSize);
-      const value = map[col][row];
+      const tile = map[col][row];
       if (e.button === 0) {
-        value.discovered = true;
-        if (value.bombNeighbour === 0) {
-          autoDiscoverAll(col, row);
+        if (tile.flag !== true) {
+          tile.discovered = true;
+          if (tile.bombNeighbour === 0) {
+            autoDiscoverAll(col, row);
+          }
         }
       }
       else if (e.button === 2) {
-        value.flag = !value.flag;
+        if (tile.discovered !== true) {
+          tile.flag = !tile.flag;
+        }
       }
       drawGrid();
     })
