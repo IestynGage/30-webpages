@@ -115,22 +115,6 @@
       ctx.strokeStyle = '#333';
       ctx.lineWidth = 1;
 
-      for (let i = 0; i <= cols; i++) {
-        const x = i * canvasBlockSize;
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-      }
-
-      for (let j = 0; j <= rows; j++) {
-        const y = j * canvasBlockSize;
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-      }
-
       for (let rowY = 0; rowY < rows; rowY++) {
         const paddingY = rowY * canvasBlockSize;
         for (let colX = 0; colX < cols; colX++) {
@@ -140,7 +124,7 @@
           createBackgroundTile(colX, rowY, x, paddingY, '#90d032', '#b8df34');
           if (tileValue.discovered && tileValue.bomb) {
             createBackgroundTile(colX, rowY, x, paddingY, '#e2c089', '#dfc971');
-            ctx.drawImage(bombTile, x, paddingY, 50, 50);
+            ctx.drawImage(bombTile, x + 5, paddingY + 5, 40, 40);
           }
           else if (tileValue.discovered) {
 
@@ -152,11 +136,29 @@
             }
           }
           if (tileValue.flag) {
-            ctx.drawImage(flagTile, x, paddingY, 50, 50);
+            ctx.drawImage(flagTile, x + 5, paddingY + 5, 40, 40);
+          }
+          if (tileValue.discovered) {
+            console.log("tileValue.discovered", tileValue.discovered)
+            drawBorderLine(colX - 1, rowY, x, x, paddingY, paddingY + canvasBlockSize);
+            drawBorderLine(colX + 1, rowY, x + canvasBlockSize, x + canvasBlockSize, paddingY, paddingY + canvasBlockSize);
+            drawBorderLine(colX, rowY - 1, x, x + canvasBlockSize, paddingY, paddingY);
+            drawBorderLine(colX, rowY + 1, x, x + canvasBlockSize, paddingY + canvasBlockSize, paddingY + canvasBlockSize);
           }
         }
       }
       
+    }
+
+    function drawBorderLine(col, row, xStart, xEnd, yStart, yEnd) {
+      if (isValidTile(col, row) && map[col][row].discovered === false) {
+        ctx.beginPath()
+        ctx.strokeStyle = '#618132';
+        ctx.lineWidth = 3;
+        ctx.moveTo(xStart, yStart);
+        ctx.lineTo(xEnd, yEnd);
+        ctx.stroke();
+      }
     }
 
     function createBackgroundTile(colX, rowY, x, paddingY, colorA, colorB) {
@@ -214,7 +216,7 @@
       const neighbours = [];
       rows.forEach(r => {
         cols.forEach(c => {
-          if (r >= 0 && r < 10 && c >= 0 && c < 10) {
+          if (isValidTile(c, r)) {
             neighbours.push({x: c, y: r});
           }
         })
@@ -222,11 +224,15 @@
 
       return neighbours;
     }
+
+    function isValidTile(x, y) {
+      return y >= 0 && y < 10 && x >= 0 && x < 10;
+    }
   
     canvas.addEventListener("contextmenu", function (e){
         e.preventDefault();
     }, false);
-    
+
     resizeCanvas();
   </script>
 </body>
