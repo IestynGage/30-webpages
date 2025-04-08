@@ -7,9 +7,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
   <style>
-    html, body {
+    * {
       margin: 0;
       padding: 0;
+    }
+    html, body {
       overflow: hidden;
       height: 100%;
       font-family: "Quicksand", sans-serif;
@@ -30,8 +32,8 @@
     }
     div {
       height: 100%;
-      display: grid;
-      align-items: flex-end;
+      /* display: grid;
+      align-items: flex-end; */
     }
   </style>
 </head>
@@ -45,7 +47,7 @@
 
     fetch("colors.json")
       .then(res => res.json())
-      .then(d => pantoneColors = d)
+      .then(d => pantoneColors = d.reverse())
       .then(() => loadColors());
 
     function loadColors() {
@@ -53,7 +55,10 @@
         const newColorDiv = document.createElement("div");
         const title = document.createElement("p");
         title.textContent = `${color.name}`;
+        title.style.paddingLeft = '8px';
+        title.style.paddingTop = '8px';
         const year = document.createElement("p");
+        year.style.paddingLeft = '8px';
         year.textContent = `${color.year}`;
         newColorDiv.appendChild(title);
         newColorDiv.appendChild(year);
