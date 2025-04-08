@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Palattone grid</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    main {
+      height: 100vh;
+      width: 100vw;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, calc(100vw / 4));
+      grid-template-rows: repeat(7, calc(100vw / 4));
+      overflow: scroll;
+    }
+    div {
+      height: 100%;
+      display: grid;
+      align-items: flex-end;
+    }
+  </style>
+</head>
+<body>
+  <main id="color-grid" class="grid">
+
+  </main>
+  <script>
+    const mainElem = document.getElementById("color-grid");
+    let pantoneColors = null;
+
+    fetch("colors.json")
+      .then(res => res.json())
+      .then(d => pantoneColors = d)
+      .then(() => loadColors());
+
+    function loadColors() {
+      pantoneColors.forEach(color => {
+        const newColorDiv = document.createElement("div");
+        newColorDiv.textContent = color.name;
+        newColorDiv.style.backgroundColor = color.color;
+        mainElem.appendChild(newColorDiv);
+      });
+    }
+    </script>
+</body>
+</html>
