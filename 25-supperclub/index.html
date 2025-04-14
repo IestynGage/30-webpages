@@ -78,13 +78,34 @@
     }
     .bold {
       font-style: normal;
-      font-weight: 400;
+      font-weight: 500;
     }
     section {
-      margin-top: 1em;
-      & > h3 {
-        margin-top: 0.5em;
+      margin-top: 0.4em;
+      & > h3:first-child {
+        margin-top: 0;
       }
+      & > h3 {
+        margin-top: 0.8em;
+      }
+    }
+
+    .info-box {
+      border: 1px solid var(--main-font-color);
+      padding: 1em;
+      border-radius: 25px;
+    }
+
+    .image-box {
+      border: 1px solid var(--main-font-color);
+      /* padding: 1em; */
+      overflow: hidden;
+      border-radius: 25px;
+    }
+    .info-box-bottom{
+      display: flex;
+      flex-direction: row;
+      justify-content:space-between;
     }
   </style>
 </head>
@@ -92,13 +113,28 @@
   <main>
     <div class="items">
       <h1> Supper club </h1>
-      <p> By <span class="signature">Iestyn Gage </span></p>
-      <div>
-        When: 23rd April
-        Location:
+      <p> By 
+      </p>
+      <span class="signature">Iestyn Gage </span>
+      <div class="info-box">
+        <p> 
+          This menu invites you on a journey through soft florals, 
+          fresh herbs, 
+          and the radiant glow of seasonal stone fruit. 
+          Each course explores the balance between sweetness and savor, 
+          warmth and brightness — capturing the essence of a spring evening in bloom.
+        </p>
+        <div class="info-box-bottom">
+          <p>
+            <span class="bold">When: </span> 23rd April
+          </p>
+          <p>
+            <span class="bold"> Location: </span> TBA
+          </p>
+        </div>
+  
       </div>
       <section>
-        <h2> Menu </h2>
         <h3> Starter</h3>
         <span class="bold"> Grilled Pear & Burrata Crostini</span> 
         <p> 
@@ -125,8 +161,6 @@
         </p>
       </section>
       <section>
-        <h2> Teaser </h2>
-        <!-- TODO Insert pictures here -->
       </section>
     </div>
   </main>
