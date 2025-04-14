@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Supperclub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Yellowtail&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --background-color: #ff9899;
+      --main-font-color: color-mix(in srgb, black 40%, #ff9899);
+    }
+
+    .quicksand {
+      font-family: "Quicksand", sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 300;
+      font-style: normal;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      color: var(--main-font-color);
+    }
+    html, body {
+      overflow: hidden;
+      height: 100%;
+      font-family: "Quicksand", sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 500;
+      font-style: normal;
+      font-size: larger;
+      background-color: var(--background-color);
+    }
+    main {
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: scroll;
+    }
+    .signature {
+      font-family: "Yellowtail", cursive;
+      font-weight: 400;
+      font-style: normal;
+    }
+    .items {
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    h2::before,
+    h2::after {
+      background-color: var(--main-font-color);;
+      content: "";
+      display: inline-block;
+      height: 2px;
+      position: relative;
+      vertical-align: middle;
+      width: 30px;
+    }
+    h2::before {
+      margin-left: 10px;
+    }
+
+    h2::after {
+      margin-right: 10px;
+    }
+    p {
+      font-style: italic;
+      font-weight: 300;
+      font-size: medium;
+    }
+    .bold {
+      font-style: normal;
+      font-weight: 400;
+    }
+    section {
+      margin-top: 1em;
+      & > h3 {
+        margin-top: 0.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="items">
+      <h1> Supper club </h1>
+      <p> By <span class="signature">Iestyn Gage </span></p>
+      <div>
+        When: 23rd April
+        Location:
+      </div>
+      <section>
+        <h2> Menu </h2>
+        <h3> Starter</h3>
+        <span class="bold"> Grilled Pear & Burrata Crostini</span> 
+        <p> 
+          Charred slivers of pear atop toasted sourdough, 
+          layered with creamy burrata, 
+          a drizzle of honey-thyme vinaigrette, 
+          and crushed pink peppercorns. 
+          Garnished with micro basil and edible flowers.
+        </p>
+        <h3> Main</h3>
+        <span class="bold"> Peach-Glazed Duck Breast with Herbed Farro</span> 
+        <p> 
+          Crisp-skinned duck breast glazed with a reduction of white peach, 
+          ginger, and rosemary. 
+          Served over warm farro tossed with spring greens, 
+          shaved fennel, 
+          and toasted hazelnuts.
+        </p>
+        <h3> Dessert </h3>
+        <span class="bold"> Pear & Peach Tarte Tatin with Chamomile Cream</span> 
+        <p> 
+          Caramelized slices of pear and peach baked into a golden puff pastry base. 
+          Served warm with a dollop of whipped chamomile cream and a scattering of candied pistachios.
+        </p>
+      </section>
+      <section>
+        <h2> Teaser </h2>
+        <!-- TODO Insert pictures here -->
+      </section>
+    </div>
+  </main>
+</body>
+</html>
