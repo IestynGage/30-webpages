@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Conway's game of life</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+    }
+    canvas {
+      display: block;
+    }
+    div {
+      display: grid;
+      height: 100vh;
+      width: 100vw;
+      place-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const map = [];
+    const canvasBlockSize = 50;
+
+    function resizeCanvas() {
+      const width = 500;
+      const height = 500;
+      const devicePixelRatio = window.devicePixelRatio;
+
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
+      canvas.width = width * devicePixelRatio;
+      canvas.height = height * devicePixelRatio;
+      ctx.scale(devicePixelRatio , devicePixelRatio);
+      drawGrid();
+    }
+
+    function drawGrid() {
+    }
+
+
+    window.addEventListener('resize', resizeCanvas);
+    canvas.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+    });
+
+  </script>
+</body>
+</html>
