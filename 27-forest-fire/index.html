@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Forest fire</title>
+  <script type="text/javascript" src="forest.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      background-color: #222222;
+    }
+    canvas {
+      display: block;
+    }
+    .canvas {
+      display: grid;
+      height: 100vh;
+      width: 100vw;
+      place-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const generationDiv = document.getElementById('generation');
+    const canvasBlockSize = 5;
+    const forest = new Forest(100);
+    let interval = null;
+
+    function resizeCanvas() {
+      const width = 500;
+      const height = 500;
+      const devicePixelRatio = window.devicePixelRatio;
+
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
+      canvas.width = width * devicePixelRatio;
+      canvas.height = height * devicePixelRatio;
+      ctx.scale(devicePixelRatio , devicePixelRatio);
+      render();
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for(let x = 0; x < forest.mapSize; x++) {
+        for (let y = 0; y < forest.mapSize; y++) {
+          if (forest.map[x][y] === 0) {
+            ctx.fillStyle = '#228B22';
+          } else if (forest.map[x][y] === 1) {
+            ctx.fillStyle = '#CF1020';
+          } else if (forest.map[x][y] === 2) {
+            ctx.fillStyle = '#393939';        
+          }
+          ctx.fillRect(x * canvasBlockSize, y * canvasBlockSize, canvasBlockSize, canvasBlockSize);
+        }
+      }
+      window.requestAnimationFrame(render);
+    }
+
+
+    window.addEventListener('resize', resizeCanvas)
+    resizeCanvas();
+    setInterval(() => {
+      forest.next();
+    }, 100);
+    forest.setFire(50, 50)
+  </script>
+</body>
+</html>
