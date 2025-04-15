@@ -10,6 +10,7 @@
       padding: 0;
       overflow: hidden;
       height: 100%;
+      background-color: #222222;
     }
     canvas {
       display: block;
@@ -30,8 +31,51 @@
   <script>
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
-    const map = [];
-    const canvasBlockSize = 50;
+    const canvasBlockSize = 10;
+
+    class Generation {
+      constructor(size) {
+        this.map = [];
+        for(let x = 0; x < size; x++) {
+          const level = []
+          for(let y = 0; y < size; y++) {
+            level.push(0);
+          }
+          this.map.push(level);
+        }
+        this.alive = [];
+        this.mapSize = size;
+      }
+
+      setAlive(x, y) {
+        this.map[x][y] = 1;
+        this.alive.push({x, y});
+      }
+
+      tileNeighbours(x, y) {
+        const rows = [x - 1, x, x + 1];
+        const cols = [y - 1, y, y + 1];
+        const neighbours = [];
+        rows.forEach(r => {
+          cols.forEach(c => {
+            if (isValidTile(c, r)) {
+              neighbours.push({x: c, y: r});
+            }
+          })
+        });
+      }
+
+      isValidTile() {
+        return y >= 0 && y < this.mapSize && x >= 0 && x < this.mapSize;
+      }
+      
+      
+    }
+
+    const firstGen = new Generation(50);
+    firstGen.setAlive(1,1);
+    firstGen.setAlive(2,2);
+    firstGen.setAlive(3,3);
 
     function resizeCanvas() {
       const width = 500;
@@ -43,10 +87,30 @@
       canvas.width = width * devicePixelRatio;
       canvas.height = height * devicePixelRatio;
       ctx.scale(devicePixelRatio , devicePixelRatio);
-      drawGrid();
+      render();
     }
 
-    function drawGrid() {
+    function render() {
+      for(let x = 0; x <= 50; x++) {
+          ctx.beginPath()
+          ctx.strokeStyle = '#F1EFEC';
+          ctx.lineWidth = 1;
+          ctx.moveTo(x * canvasBlockSize, 0);
+          ctx.lineTo(x * canvasBlockSize, 50 * canvasBlockSize);
+          ctx.stroke();
+      }
+      for (let y = 0; y <= 50; y++) {
+          ctx.beginPath()
+          ctx.strokeStyle = '#F1EFEC';
+          ctx.lineWidth = 1;
+          ctx.moveTo(0, y * canvasBlockSize);
+          ctx.lineTo(50 * canvasBlockSize, y * canvasBlockSize);
+          ctx.stroke();
+      }
+      firstGen.alive.forEach((v) => {
+        ctx.fillStyle = '#F1EFEC';
+        ctx.fillRect(v.x * canvasBlockSize, v.y * canvasBlockSize, canvasBlockSize, canvasBlockSize);
+      });
     }
 
 
@@ -54,6 +118,8 @@
     canvas.addEventListener('mousedown', (e) => {
       e.preventDefault();
     });
+
+    resizeCanvas();
 
   </script>
 </body>
