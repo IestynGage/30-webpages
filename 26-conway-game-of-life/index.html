@@ -91,6 +91,7 @@
         ctx.lineTo(currentGeneration.mapSize * canvasBlockSize, y * canvasBlockSize);
         ctx.stroke();
       }
+      window.requestAnimationFrame(render);
     }
 
 
@@ -117,7 +118,6 @@
         currentGeneration = currentGeneration.nextGeneration();
         generation = generation + 1;
         generationDiv.textContent = `Generation ${generation}`
-        render();
       }, 300);
     }
 
