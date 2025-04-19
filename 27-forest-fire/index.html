@@ -59,19 +59,12 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for(let x = 0; x < forest.mapSize; x++) {
         for (let y = 0; y < forest.mapSize; y++) {
-          if (forest.map[x][y] === FOREST_CODES.FOREST_LIGHT) {
-            ctx.fillStyle = '#248721';
+          if (forest.map[x][y].code === FOREST_CODES.FOREST) {
+            ctx.fillStyle = forest.map[x][y].color;
           } 
-          if (forest.map[x][y] === FOREST_CODES.FOREST_MEDIUEM) {
-            ctx.fillStyle = '#4a6741';
-          }
-          if (forest.map[x][y] === FOREST_CODES.FOREST_DARK) {
-            ctx.fillStyle = '#3f5a36';
-          }
-          else if (forest.map[x][y] === FOREST_CODES.FIRE) {
+          else if (forest.map[x][y].code === FOREST_CODES.FIRE) {
             switch (randomNumber(5)) {
               case 0:
-                // ctx.fillStyle = '#CF1020';
                 ctx.fillStyle = '#ff0000';
                 break;
               case 1:
@@ -87,10 +80,10 @@
                 ctx.fillStyle = '#CF1020';
                 break;
             }
-          } else if (forest.map[x][y] === FOREST_CODES.BURNT) {
-            ctx.fillStyle = '#393939';        
-          } else if (forest.map[x][y] === FOREST_CODES.WATER) {
-            ctx.fillStyle = '#416bdf';        
+          } else if (forest.map[x][y].code === FOREST_CODES.BURNT) {
+            ctx.fillStyle = forest.map[x][y].color;        
+          } else if (forest.map[x][y].code === FOREST_CODES.WATER) {
+            ctx.fillStyle = forest.map[x][y].color;        
           }
           ctx.fillRect(x * canvasBlockSize, y * canvasBlockSize, canvasBlockSize, canvasBlockSize);
         }
@@ -110,6 +103,12 @@
         forest.setWater(ix,iy);
       }
     }
+    // window.addEventListener('keydown', (e) => {
+    //   if (e.code === 'Space') {
+    //     e.preventDefault();
+    //     forest.next();
+    //   }
+    // });
     
   </script>
 </body>
