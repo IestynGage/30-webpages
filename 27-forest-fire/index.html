@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Forest fire</title>
-  <script type="text/javascript" src="forest.js"></script>
   <style>
     :root{
       --burnt: #393939;
@@ -33,8 +32,10 @@
   <div class="canvas">
     <canvas id="canvas"></canvas>
   </div>
+  <script type="module">
+    import { Forest, FOREST_CODES } from "./forest.js";
+    import { randomFireTexture } from "./textures.js";
 
-  <script>
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     const generationDiv = document.getElementById('generation');
@@ -63,26 +64,12 @@
             ctx.fillStyle = forest.map[x][y].color;
           } 
           else if (forest.map[x][y].code === FOREST_CODES.FIRE) {
-            switch (randomNumber(5)) {
-              case 0:
-                ctx.fillStyle = '#ff0000';
-                break;
-              case 1:
-                ctx.fillStyle = '#ff5a00';
-                break;
-              case 2:
-                ctx.fillStyle = '#ff9a00';
-                break;
-              case 3:
-                ctx.fillStyle = '#ffce00';
-                break;
-              case 4:
-                ctx.fillStyle = '#CF1020';
-                break;
-            }
-          } else if (forest.map[x][y].code === FOREST_CODES.BURNT) {
+            ctx.fillStyle = randomFireTexture();
+          } 
+          else if (forest.map[x][y].code === FOREST_CODES.BURNT) {
             ctx.fillStyle = forest.map[x][y].color;        
-          } else if (forest.map[x][y].code === FOREST_CODES.WATER) {
+          } 
+          else if (forest.map[x][y].code === FOREST_CODES.WATER) {
             ctx.fillStyle = forest.map[x][y].color;        
           }
           ctx.fillRect(x * canvasBlockSize, y * canvasBlockSize, canvasBlockSize, canvasBlockSize);
@@ -97,12 +84,6 @@
     setInterval(() => {
       forest.next();
     }, 100);
-    // forest.setFire(20, 20);
-    // for (let ix = 30; ix < 80; ix++) {
-    //   for (let iy = 30; iy < 60; iy++) {
-    //     forest.setWater(ix,iy);
-    //   }
-    // }
 
     let waterMode = true;
     window.addEventListener('keydown', (e) => {
@@ -126,14 +107,6 @@
         forest.setFire(mapTile.x, mapTile.y);
       } 
     });
-
-    function convertMouseToMapLocation(e) {
-      var rect = canvas.getBoundingClientRect();
-      return {
-        x: Math.floor((e.clientX - rect.left) / canvasBlockSize),
-        y: Math.floor((e.clientY - rect.top) / canvasBlockSize)
-      }
-    }
 
     function convertMouseToMapLocation(e) {
       var rect = canvas.getBoundingClientRect();

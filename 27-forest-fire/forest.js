@@ -1,21 +1,13 @@
-const FOREST_CODES = {
+import { randomBurntTexture, randomForestTexture, randomWaterTexture } from "./textures.js";
+
+export const FOREST_CODES = {
   FOREST: 0,
   FIRE: 1,
   BURNT: 2,
   WATER: 3
 }
 
-const FOREST_COLOR = ["#248721", "#4a6741", "#3f5a36"];
-
-const BURNT_TEXTURES = ["#393939", "#4a4a4a", "#303030"];
-
-const WATER_TEXTURE = ["#3b9dff", "#416bdf", "#416bdf"];
-
-function randomBurntTexture() {
-  return BURNT_TEXTURES[randomNumber(3)];
-}
-
-class Forest {
+export class Forest {
   constructor(size) {
     this.map = [];
     for(let x = 0; x < size; x++) {
@@ -23,7 +15,7 @@ class Forest {
       for(let y = 0; y < size; y++) {
         level.push({
           code: FOREST_CODES.FOREST,
-          color: FOREST_COLOR[randomNumber(3)]
+          color: randomForestTexture()
         });
       }
       this.map.push(level);
@@ -56,7 +48,7 @@ class Forest {
     if (this.isValidTile(x, y) && this.map[x][y].code !== FOREST_CODES.WATER) {
       this.map[x][y] = { 
         code: FOREST_CODES.WATER,
-        color: WATER_TEXTURE[randomNumber(3)]
+        color: randomWaterTexture()
       };
       this.water.push({x: x, y: y});
     }
@@ -89,7 +81,6 @@ class Forest {
   }
 
   isValidTile(x, y) {
-    // TODO replace forest fire with a HashMap
     return y >= 0 && y < this.mapSize && x >= 0 && x < this.mapSize;
   }
   
