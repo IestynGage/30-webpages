@@ -97,18 +97,70 @@
     setInterval(() => {
       forest.next();
     }, 100);
-    forest.setFire(20, 20);
-    for (let ix = 30; ix < 80; ix++) {
-      for (let iy = 30; iy < 60; iy++) {
-        forest.setWater(ix,iy);
+    // forest.setFire(20, 20);
+    // for (let ix = 30; ix < 80; ix++) {
+    //   for (let iy = 30; iy < 60; iy++) {
+    //     forest.setWater(ix,iy);
+    //   }
+    // }
+
+    let waterMode = true;
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        waterMode = false;
+      }
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (e.buttons === 0) {
+        // isDrawing = false;
+      }
+      else if (waterMode) {
+        const selectedTile = convertMouseToMapLocation(e);
+        const allTiles = circleTile(selectedTile.x, selectedTile.y, 2);
+        allTiles.forEach(tile => {
+          forest.setWater(tile.x, tile.y);
+        });
+      } else {
+        const mapTile = convertMouseToMapLocation(e);
+        forest.setFire(mapTile.x, mapTile.y);
+      } 
+    });
+
+    function convertMouseToMapLocation(e) {
+      var rect = canvas.getBoundingClientRect();
+      return {
+        x: Math.floor((e.clientX - rect.left) / canvasBlockSize),
+        y: Math.floor((e.clientY - rect.top) / canvasBlockSize)
       }
     }
-    // window.addEventListener('keydown', (e) => {
-    //   if (e.code === 'Space') {
-    //     e.preventDefault();
-    //     forest.next();
-    //   }
-    // });
+
+    function convertMouseToMapLocation(e) {
+      var rect = canvas.getBoundingClientRect();
+      return {
+        x: Math.floor((e.clientX - rect.left) / canvasBlockSize),
+        y: Math.floor((e.clientY - rect.top) / canvasBlockSize)
+      }
+    }
+
+    function circleTile(x,y,r) {
+      let tiles = []
+      for (let xi = x - r; xi < x + r; xi++) {
+        for (let yi = y - r; yi < y + r; yi++) {
+          if(inRadius(x,y,xi,yi,r)) {
+            console.log('in radius')
+            tiles.push({x: xi, y: yi});
+          }  
+        } 
+      }
+      return tiles;
+    }
+
+    function inRadius(x,y,xi,yi,r) {
+      const distance = Math.sqrt(Math.pow(xi-x,2) + Math.pow(yi-y,2));
+      console.log(`params ${distance}`);
+      return distance <= r;
+    }
     
   </script>
 </body>

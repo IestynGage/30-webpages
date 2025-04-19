@@ -52,7 +52,8 @@ class Forest {
   }
 
   setWater(x, y) {
-    if (this.isValidTile(x, y)) {
+    console.log(x, y)
+    if (this.isValidTile(x, y) && this.map[x][y].code !== FOREST_CODES.WATER) {
       this.map[x][y] = { 
         code: FOREST_CODES.WATER,
         color: WATER_TEXTURE[randomNumber(3)]
@@ -105,7 +106,7 @@ class Forest {
           }
         }
       })
-      if (randomNumber(4) === 0) {
+      if (randomNumber(5) === 0) {
         this.setBurn(tile.x, tile.y);
       }
     }
