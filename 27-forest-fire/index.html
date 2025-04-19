@@ -6,6 +6,11 @@
   <title>Forest fire</title>
   <script type="text/javascript" src="forest.js"></script>
   <style>
+    :root{
+      --burnt: #393939;
+      --water-color: #393939;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -54,12 +59,38 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for(let x = 0; x < forest.mapSize; x++) {
         for (let y = 0; y < forest.mapSize; y++) {
-          if (forest.map[x][y] === 0) {
-            ctx.fillStyle = '#228B22';
-          } else if (forest.map[x][y] === 1) {
-            ctx.fillStyle = '#CF1020';
-          } else if (forest.map[x][y] === 2) {
+          if (forest.map[x][y] === FOREST_CODES.FOREST_LIGHT) {
+            ctx.fillStyle = '#248721';
+          } 
+          if (forest.map[x][y] === FOREST_CODES.FOREST_MEDIUEM) {
+            ctx.fillStyle = '#4a6741';
+          }
+          if (forest.map[x][y] === FOREST_CODES.FOREST_DARK) {
+            ctx.fillStyle = '#3f5a36';
+          }
+          else if (forest.map[x][y] === FOREST_CODES.FIRE) {
+            switch (randomNumber(5)) {
+              case 0:
+                // ctx.fillStyle = '#CF1020';
+                ctx.fillStyle = '#ff0000';
+                break;
+              case 1:
+                ctx.fillStyle = '#ff5a00';
+                break;
+              case 2:
+                ctx.fillStyle = '#ff9a00';
+                break;
+              case 3:
+                ctx.fillStyle = '#ffce00';
+                break;
+              case 4:
+                ctx.fillStyle = '#CF1020';
+                break;
+            }
+          } else if (forest.map[x][y] === FOREST_CODES.BURNT) {
             ctx.fillStyle = '#393939';        
+          } else if (forest.map[x][y] === FOREST_CODES.WATER) {
+            ctx.fillStyle = '#416bdf';        
           }
           ctx.fillRect(x * canvasBlockSize, y * canvasBlockSize, canvasBlockSize, canvasBlockSize);
         }
@@ -73,7 +104,13 @@
     setInterval(() => {
       forest.next();
     }, 100);
-    forest.setFire(50, 50)
+    forest.setFire(20, 20);
+    for (let ix = 30; ix < 80; ix++) {
+      for (let iy = 30; iy < 60; iy++) {
+        forest.setWater(ix,iy);
+      }
+    }
+    
   </script>
 </body>
 </html>
