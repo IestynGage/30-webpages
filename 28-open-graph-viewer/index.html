@@ -81,14 +81,37 @@
         image: ""
       }
 
-      cardDiv.innerHTML = `
-        <img width="590" src="${exampleData.image}" >
-        <div class="card-textbox" >
-          <h2> ${exampleData.address} </h2>
-          <h1> ${exampleData.title} </h1>
-          <p> ${exampleData.description} </p>
-        </div>
-      `
+      function getOpenGraph(dom, name) {
+        return dom.querySelector(`meta[property="og:${name}"]`).getAttribute('content');
+      }
+
+      fetch("http://localhost:3000/api/graph", {
+        method: 'POST',
+        body: JSON.stringify({url: formProps.url})
+      })
+        .then(z => z.json())
+        .then(x => {
+          const parser = new DOMParser();
+          const dom = parser.parseFromString(x.htmlText, "text/html");
+          console.log(x);
+          const siteName = getOpenGraph(dom, "site_name");
+          const image = getOpenGraph(dom, "image");
+          const title = getOpenGraph(dom, "title");
+          const description = getOpenGraph(dom, "description");
+          setCard(image, siteName,  title, description)
+        })
+
+
+      function setCard(image, siteName, title, description) {
+        cardDiv.innerHTML = `
+          <img width="590" src="${image}" >
+          <div class="card-textbox" >
+            <h2> ${siteName} </h2>
+            <h1> ${title} </h1>
+            <p> ${description} </p>
+          </div>
+        `
+      }
 
     }
 

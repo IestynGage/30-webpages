@@ -1,0 +1,13 @@
+{
+  "name": "28-open-graph-viewer",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "scripts": {
+    "start": "bun run index.ts"
+  }
+}
