@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple hompage</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      /* min-height: 100%;  */
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+    .main-grid {
+      display: grid;
+      grid-template-columns: repeat(
+        12,
+        min(calc((100vw - 240px) / 12), 75px)
+        /* min(calc(100vw - 240px / 12),75px) */
+        );
+      grid-auto-rows: minmax(75px, auto);
+      gap: 20px;
+      /* columns: 12; */
+      /* max-width: 500px; */
+      grid-template-areas:
+        "hero hero hero hero hero name name main-picture main-picture main-picture main-picture main-picture"
+        "hero hero hero hero hero name name main-picture main-picture main-picture main-picture main-picture"
+        "recent-projects recent-projects recent-projects recent-projects recent-projects location location main-picture main-picture main-picture main-picture main-picture"
+        "recent-projects recent-projects recent-projects recent-projects recent-projects location location main-picture main-picture main-picture main-picture main-picture"
+        "recent-projects recent-projects recent-projects recent-projects recent-projects location location empty-card empty-card empty-card word-count word-count"
+        "blog-post blog-post blog-post blog-post blog-post climbing climbing climbing contact-me contact-me contact-me contact-me"
+        "blog-post blog-post blog-post blog-post blog-post climbing climbing climbing contact-me contact-me contact-me contact-me"
+        "blog-post blog-post blog-post blog-post blog-post climbing climbing climbing game-control game-control game-control game-control"
+        "blog-post blog-post blog-post blog-post blog-post game game game game game game game"
+        "other other other other other game game game game game game game"
+        "other other other other other game game game game game game game"
+        ;
+    }
+    .card {
+      background-color: #DDEEF8;
+      border-radius: 25px;
+      height: auto;
+    }
+    .hero {
+      grid-area: hero;
+    }
+    .name {
+      grid-area: name;
+    }
+    .main-picture {
+      grid-area: main-picture;
+    }
+    .recent-projects {
+      grid-area: recent-projects;
+    }
+    .location {
+      grid-area: location;
+    }
+    .empty-card {
+      grid-area: empty-card;
+    }
+    .word-count {
+      grid-area: word-count;
+    }
+    .blog-post {
+      grid-area: blog-post;
+    }
+    .climbing {
+      grid-area: climbing;
+    }
+    .contact-me {
+      grid-area: contact-me;
+    }
+    .game-control {
+      grid-area: game-control;
+    }
+    .game {
+      grid-area: game;
+    }
+    .other {
+      grid-area: other;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-grid">
+    <div class="hero card">
+      Hello I'm username
+    </div>
+    <div class="name card">
+      Say my name
+    </div>
+    <div class="main-picture card">
+      picture
+    </div>
+    <div class="recent-projects card">
+      recent projects
+    </div>
+    <div class="location card">
+      Location
+    </div>
+    <div class="empty-card card">
+      empty-card
+    </div>
+    <div class="word-count card">
+      word-count
+    </div>
+    <div class="blog-post card">
+      Recent-blogs
+    </div>
+    <div class="climbing card">
+      Climbing
+    </div>
+    <div class="contact-me card">
+      Contact me
+    </div>
+    <div class="game-control card">
+      Game control
+    </div>
+    <div class="game card">
+      Game
+    </div>
+    <div class="other card">
+      Coming soon!
+    </div>
+  </div>
+</body>
+</html>
