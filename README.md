@@ -22,3 +22,9 @@ After the 30 pages are done I'll go over each page and aswer any questions I had
 * `13-soduku` - A soduku game that uses one event listner to get which cell was selected.
 * `14-magnets` - A fun background that has magnets face the mouse.
 * `15-sqlite` - SQL query tool that allows you to export your created tables.
+* `16-todo-app` - Simple todo app written in vue.
+* `17-quote` - Dispalys a new quote when you refresh to page.
+* `18-trees-killed` Gives a estimate of the trees killed since you've been on the webpage.
+* `19-type-test` A one per minute type test.
+* `20-one-minute-drawings` A game to draw a image in one minute.
+* `21-patone-color-guesser` A game to guess patone colors.
